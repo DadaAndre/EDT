@@ -12,17 +12,18 @@ public abstract class BinaryConstraint {
        this.firstActivity = first;
        this.secondActivity = second;
     }
-    public String toString() {
-      return this.firstActivity + " avant " + this.secondActivity;
+
+    public abstract boolean isSatisfied(int dateDebutAct1, int dateDebutAct2);
+
+    public boolean isSatisfiedBySchedule(HashMap<Activity, Integer> edt){
+       return isSatisfied(edt.get(this.getFirstActivity()),edt.get(this.getSecondActivity()));
     }
 
     public Activity getFirstActivity(){
       return this.firstActivity;
     }
+    
     public Activity getSecondActivity(){
       return this.secondActivity;
     }
-    public abstract boolean isSatisfied(int dateDebutAct1, int dateDebutAct2);
-
-    public abstract boolean isSatisfiedBySchedule(HashMap<Activity, Integer> edt);
 }

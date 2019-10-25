@@ -10,12 +10,12 @@ public class Activity {
 		this.duree = duree;
 	}
 
-	public int getDuree() {
-		return this.duree;
-	}
-
 	public String getDesc() {
 		return this.desc;
+	}
+
+	public int getDuree() {
+		return this.duree;
 	}
 
 	@Override
