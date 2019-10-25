@@ -15,7 +15,21 @@ L'application devra :
 
 # Structuration du projet
 
-Le projet comporte 2 dossiers :
-- doc → Regroupe les différents documents importants du projet
+Le projet comporte 1 dossier :
+
 - src → Contient le code source de l'application
+
+# Mode d'emploi
+
+
+
+# Collaborateurs
+
+Ce projet étant réalisé en groupe, voici la liste des différentes personnes qui ont travaillé dessus :
+
+- 21809742 Lorada ANDRÉ - L2 Info 1A - Groupe CC 40
+- 21707781 Théo AUVRAY - L2 Info 1A - Groupe CC 40
+- 21806986 Auréline DEROUIN - L2 Info 1A - Groupe CC 40
+- 21909920 Jason MARTIN - L2 Info 1A - Groupe CC 40
+- 21810751 Maxime THOMAS - L2 Info 1A - Groupe CC 40
 
