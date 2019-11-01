@@ -3,7 +3,7 @@ package edt.constraints;
 import edt.activity.Activity;
 import java.util.HashMap;
 
-public abstract class BinaryConstraint {
+public abstract class BinaryConstraint implements Constraint{
 
     private Activity firstActivity;
     private Activity secondActivity;
@@ -22,7 +22,7 @@ public abstract class BinaryConstraint {
     public Activity getFirstActivity(){
       return this.firstActivity;
     }
-    
+
     public Activity getSecondActivity(){
       return this.secondActivity;
     }
