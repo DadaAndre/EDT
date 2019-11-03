@@ -4,7 +4,7 @@ package edt.activity;
 * Représente des créneaux non positionnés dans le temps
 */
 public class Activity {
-	
+
 	/**
 	* Description de l'activité
 	*/
@@ -23,6 +23,7 @@ public class Activity {
 		this.duree = duree;
 	}
 
+
 	/**
 	* Récupère la description de l'activité
 	*
@@ -31,6 +32,7 @@ public class Activity {
 	public String getDesc() {
 		return this.desc;
 	}
+
 
 	/**
 	* Récupère la durée de l'activité

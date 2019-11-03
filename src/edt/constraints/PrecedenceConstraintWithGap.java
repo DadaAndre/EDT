@@ -20,7 +20,7 @@ public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
 	* @param second La deuxième activité
 	* @param gap Le temps minimum entre la fin de la première activité et le début de la deuxième (en minutes)
 	*/
-	public PrecedenceConstraintWithGap(Activity activite1, Activity activite2, int gap){
+	public PrecedenceConstraintWithGap(Activity activite1, Activity activite2, int gap) {
 		super(activite1, activite2);
 
 		this.gap = gap;
@@ -28,7 +28,7 @@ public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
 
 
 	@Override
-	public boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2){
+	public boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2) {
 		GregorianCalendar dateFinAct1 = new GregorianCalendar(); //création d'un nouveau calendrier.
 		dateFinAct1.setTime(dateDebutAct1.getTime()); // mettre ce nouveau calendrier à la même date que la première activité.
 		dateFinAct1.add(GregorianCalendar.MINUTE, this.getFirstActivity().getDuree()+this.gap); //on ajoute à l'heure de la première activité, sa durée et la pause.

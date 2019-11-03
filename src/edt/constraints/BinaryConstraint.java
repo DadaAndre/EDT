@@ -23,7 +23,7 @@ public abstract class BinaryConstraint implements Constraint {
 	* @param first La première activité
 	* @param second La deuxième activité
 	*/
-	public BinaryConstraint(Activity first, Activity second){
+	public BinaryConstraint(Activity first, Activity second) {
 		this.firstActivity = first;
 		this.secondActivity = second;
 	}
@@ -40,7 +40,7 @@ public abstract class BinaryConstraint implements Constraint {
 
 
 	@Override
-	public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt){
+	public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
 		return isSatisfied(edt.get(this.getFirstActivity()),edt.get(this.getSecondActivity()));
 	}
 
@@ -50,7 +50,7 @@ public abstract class BinaryConstraint implements Constraint {
 	*
 	* @return La première activité
 	*/
-	public Activity getFirstActivity(){
+	public Activity getFirstActivity() {
 		return this.firstActivity;
 	}
 
@@ -60,7 +60,7 @@ public abstract class BinaryConstraint implements Constraint {
 	*
 	* @return La seconde activité
 	*/
-	public Activity getSecondActivity(){
+	public Activity getSecondActivity() {
 		return this.secondActivity;
 	}
 }
