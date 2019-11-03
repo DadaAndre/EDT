@@ -31,21 +31,23 @@ public class Main {
 		PrecedenceConstraintWithGap contrainteWithGap = new PrecedenceConstraintWithGap(options, ip, 60);
 		PrecedenceConstraintWithGap contrainteWithGap2 = new PrecedenceConstraintWithGap(options, ip, 30);
 		MeetConstraint meetConstraint = new MeetConstraint(sport, ip);
-		Verifier verif = new Verifier();
 
 		//Création d'un emploi du temps et ajout des activités avec l'heure à laquelle elles commencent
-		HashMap <Activity, GregorianCalendar> emploiDuTemps = new HashMap<Activity, GregorianCalendar> ();
+		HashMap<Activity, GregorianCalendar> emploiDuTemps = new HashMap<Activity, GregorianCalendar>();
 		emploiDuTemps.put(sport, date1_9h);
 		emploiDuTemps.put(options, date1_11h);
 		emploiDuTemps.put(marche, date1_15h);
 		emploiDuTemps.put(ip, date1_17h);
 		emploiDuTemps.put(devoirs, date1_18h);
 
+		// initialisation du Verifier
+		Verifier verif = new Verifier();
+
 		//On ajoute des contraintes dans la HashMap se trouvant dans la classe Verifier
-		verif.addElement(new MeetConstraint(sport,options));
-		verif.addElement(new PrecedenceConstraintWithGap(options,marche,120));
-		verif.addElement(new PrecedenceConstraint(marche,ip));
-		verif.addElement(new PrecedenceConstraint(ip,devoirs));
+		verif.addConstraint(new MeetConstraint(sport, options));
+		verif.addConstraint(new PrecedenceConstraintWithGap(options, marche, 120));
+		verif.addConstraint(new PrecedenceConstraint(marche, ip));
+		verif.addConstraint(new PrecedenceConstraint(ip, devoirs));
 
 		//--------------------------------------- TESTS ---------------------------------------
 		UnitTest.setTestLabel("PrecedenceConstraint");
@@ -68,6 +70,8 @@ public class Main {
 
 		UnitTest.setTestLabel("Verifier");
 		UnitTest.isTrue(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
+		verif.addConstraint(new PrecedenceConstraint(devoirs, ip)); // On ajoute une contrainte non valable
+		UnitTest.isFalse(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 
 		UnitTest.summary();
 	}

@@ -6,25 +6,28 @@ import edt.activity.Activity;
 import edt.constraints.*;
 import java.util.GregorianCalendar;
 
-public class Verifier{
+public class Verifier {
+
 	private ArrayList<Constraint> listOfConstraint;
 
-	public Verifier(){
+	public Verifier() {
 		this.listOfConstraint = new ArrayList<>(); //Création d'une ArrayList contenant la liste des contraintes
 	}
 
-	public void addElement(Constraint constraint){ //ajout d'une contrainte
+	public void addConstraint(Constraint constraint) { //ajout d'une contrainte
 		this.listOfConstraint.add(constraint);
 	}
 
-	public boolean verify(HashMap<Activity,GregorianCalendar> edt){
+	public boolean verify(HashMap<Activity,GregorianCalendar> edt) {
 		for(Constraint c : listOfConstraint) { //on essaye chaque contraintes
 
 			//on regarde que l'emploi du temps satisfait la contrainte actuelle
-			if(c.isSatisfiedBySchedule(edt) == false){ //si une seule condition est fausse, on retourne false
+			if(c.isSatisfiedBySchedule(edt) == false) { //si une seule condition est fausse, on retourne false
 				return false;
 			}
-		} return true;
+		}
+
+		return true;
 	}
 
 
