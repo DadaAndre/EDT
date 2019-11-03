@@ -33,7 +33,7 @@ public abstract class BinaryConstraint implements Constraint {
 	* Vérifie si la contrainte est satisfaite, sachant que la première activité commence à dateDebutAct1 et la deuxième commence à dateDebutAct2
 	*
 	* @param dateDebutAct1 Le début de la première activité
-	* @param dateDebutAct1 Le début de la deuxième activité
+	* @param dateDebutAct2 Le début de la deuxième activité
 	* @return True si la contrainte est satisfaite false sinon
 	*/
 	public abstract boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2);
