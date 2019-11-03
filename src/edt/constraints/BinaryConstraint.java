@@ -2,6 +2,7 @@ package edt.constraints;
 
 import edt.activity.Activity;
 import java.util.HashMap;
+import java.util.GregorianCalendar;
 
 public abstract class BinaryConstraint implements Constraint{
 
@@ -13,9 +14,9 @@ public abstract class BinaryConstraint implements Constraint{
        this.secondActivity = second;
     }
 
-    public abstract boolean isSatisfied(int dateDebutAct1, int dateDebutAct2);
+    public abstract boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2);
 
-    public boolean isSatisfiedBySchedule(HashMap<Activity, Integer> edt){
+    public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt){
        return isSatisfied(edt.get(this.getFirstActivity()),edt.get(this.getSecondActivity()));
     }
 

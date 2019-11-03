@@ -2,6 +2,7 @@ package edt.constraints;
 
 import edt.activity.Activity;
 import java.util.HashMap;
+import java.util.GregorianCalendar;
 
 public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
 
@@ -14,8 +15,14 @@ public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
     }
 
     @Override
-    public boolean isSatisfied(int dateDebutAct1, int dateDebutAct2){
-        return dateDebutAct1*60 + this.getFirstActivity().getDuree() + this.gap <= dateDebutAct2*60;
+    public boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2){
+		GregorianCalendar dateFinAct1 = new GregorianCalendar(); //création d'un nouveau calendrier.
+		dateFinAct1.setTime(dateDebutAct1.getTime()); // mettre ce nouveau calendrier à la même date que la première activité.
+		dateFinAct1.add(GregorianCalendar.MINUTE, this.getFirstActivity().getDuree()+this.gap); //on ajoute à l'heure de la première activité, sa durée et la pause.
+
+        return dateFinAct1.compareTo(dateDebutAct2) <= 0;  /* on compare les deux activités: si la deuxième activité
+														  commence après la première activité (et le gap), alors le compareTo est un nombre inferieur à "0".
+    }								  					  */
     }
 
     @Override
