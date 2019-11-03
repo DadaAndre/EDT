@@ -1,6 +1,7 @@
 package edt.constraints;
 
 import java.util.HashMap;
+import edt.activity.Activity;
 
 public interface Constraint{
 
