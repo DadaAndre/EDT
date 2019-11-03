@@ -18,11 +18,6 @@ public class Main {
 		GregorianCalendar date1_11h = new GregorianCalendar(2019, 9, 15, 11, 0, 0);
 		GregorianCalendar date1_12h = new GregorianCalendar(2019, 9, 15, 12, 0, 0);
 
-		int neufHeure = 9;
-		int dixHeure = 10;
-		int onzeHeure = 11;
-		int douzeHeure = 12;
-
 		PrecedenceConstraint contrainte = new PrecedenceConstraint (sport, ip);
 		PrecedenceConstraintWithGap contrainteWithGap = new PrecedenceConstraintWithGap(options, ip, 60);
 		PrecedenceConstraintWithGap contrainteWithGap2 = new PrecedenceConstraintWithGap(options, ip, 30);

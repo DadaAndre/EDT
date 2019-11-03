@@ -20,9 +20,10 @@ public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
 		dateFinAct1.setTime(dateDebutAct1.getTime()); // mettre ce nouveau calendrier à la même date que la première activité.
 		dateFinAct1.add(GregorianCalendar.MINUTE, this.getFirstActivity().getDuree()+this.gap); //on ajoute à l'heure de la première activité, sa durée et la pause.
 
-        return dateFinAct1.compareTo(dateDebutAct2) <= 0;  /* on compare les deux activités: si la deuxième activité
-														  commence après la première activité (et le gap), alors le compareTo est un nombre inferieur à "0".
-    }								  					  */
+		/* on compare les deux activités: si la deuxième activité
+	  	* commence après la fin de la première activité (et le gap), alors le compareTo est un nombre inferieur à "0".
+		*/
+		return dateFinAct1.compareTo(dateDebutAct2) <= 0;
     }
 
     @Override
