@@ -74,6 +74,27 @@ public class Main {
 		UnitTest.isFalse(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 
 		UnitTest.summary();
+
+		// Pour aller plus loin: ordonnancement d'activité
+		Activity cafe = new Activity ("Boire un café", 10);
+		Activity cours = new Activity ("Cours de POO", 75);
+		Activity campus = new Activity ("Aller au campus", 30);
+		Activity lireMail = new Activity ("Lire mon courrier électronique", 5);
+
+		PrecedenceConstraint c1 = new PrecedenceConstraint (cafe, campus);
+		PrecedenceConstraint c2 = new PrecedenceConstraint (campus, cours);
+		PrecedenceConstraint c3 = new PrecedenceConstraint (lireMail, cours);
+		List<PrecedenceConstraint> allConstraints = Arrays.asList (c1, c2, c3);
+
+
+		Scheduler sheduler = new Scheduler();
+		HashMap<Activity, Integer> schedule = sheduler.computeSchedule(allConstraints);
+
+		if (schedule == null) {
+			System.out.println("Pas de plan cohérent avec toutes les contraintes");
+		} else {
+			System.out.println("Un plan trouvé : " + schedule);
+		}
 	}
 
 }
