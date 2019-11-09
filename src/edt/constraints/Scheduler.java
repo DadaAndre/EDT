@@ -1,70 +1,71 @@
 package edt.constraints;
 
+import edt.constraints.PrecedenceConstraint;
+import edt.activity.Activity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Scheduler{
+public class Scheduler {
 
+	private HashMap<Activity, Integer> initNbPreds(List<PrecedenceConstraint> contraintes) {
+		HashMap<Activity, Integer> nbrPredecesseurs = new HashMap<>();
 
-    private HashMap<Activity, Integer> initNbPreds(List<PrecedenceConstraint> listeContraintes){
-        HashMap<Activity, Integer> precede = new HashMap<Activity, Integer>();
+		for(PrecedenceConstraint precedConstraint : contraintes) {
+			if (! nbrPredecesseurs.containsKey(precedConstraint.getFirstActivity())) {
+				nbrPredecesseurs.put(precedConstraint.getFirstActivity(),0);
+			}
 
-        for(PrecedenceConstraint actContrainte : listeContraintes){
-            if (! precede.containsKey(actContrainte.getFirstActivity())){
-                precede.put(actContrainte.getFirstActivity(),0);
-            }
-            if (precede.containsKey(actContrainte.getSecondActivity())){
-                Integer valeur = precede.get(actContrainte.getSecondActivity());
-                precede.put(actContrainte.getSecondActivity(),valeur+1);
-            }
-            else {
-                precede.put(actContrainte.getSecondActivity(),1);
-            }
-        }
-        return precede;
+			if (nbrPredecesseurs.containsKey(precedConstraint.getSecondActivity())) {
+				Integer valeur = nbrPredecesseurs.get(precedConstraint.getSecondActivity());
+				nbrPredecesseurs.put(precedConstraint.getSecondActivity(), valeur+1);
+			} else {
+				nbrPredecesseurs.put(precedConstraint.getSecondActivity(), 1);
+			}
+		}
 
-    }
+		return nbrPredecesseurs;
+	}
 
-    private void scheduleActivity (Activity act, int heure, List<PrecedenceConstraint> listeContraintes, HashMap<Activity, Integer> edt, HashMap<Activity, Integer> nbrPredecesseurs){    //ajoute l'activité dans l'edt et réduit de -1 ses prédécesseurs
+	//ajoute l'activité dans l'edt et réduit de -1 ses prédécesseurs
+	private void scheduleActivity(Activity act, int heure, List<PrecedenceConstraint> contraintes, HashMap<Activity, Integer> edt, HashMap<Activity, Integer> nbrPredecesseurs) {
+		edt.put(act, heure);
 
-        edt.put(act,heure);
+		for (PrecedenceConstraint precedConstraint : contraintes) {
+			if (precedConstraint.getFirstActivity() == act) {
+				Integer valeur = nbrPredecesseurs.get(precedConstraint.getSecondActivity());
+				nbrPredecesseurs.put(precedConstraint.getSecondActivity(), valeur-1);
+			}
+		}
 
-        for (PrecedenceConstraint actContrainte : listeContraintes){
-            if (actContrainte.getFirstActivity()==act){
-                Integer predeDimin = nbrPredecesseurs.get(actContrainte.getSecondActivity());
-                nbrPredecesseurs.put(actContrainte.getSecondActivity(),predeDimin-1);
-            }
+		nbrPredecesseurs.remove(act);
+	}
 
-        }
-    nbrPredecesseurs.remove(act);
-    }
+	public HashMap<Activity, Integer> computeSchedule(List<PrecedenceConstraint> contraintes) {
+		HashMap<Activity, Integer> nbrPredecesseurs = initNbPreds(contraintes);
+		HashMap<Activity, Integer> edt = new HashMap<Activity, Integer>();
+		int heure = 0;
 
-    public HashMap<Activity, Integer> computeSchedule (List<PrecedenceConstraint> contraintes){
-        HashMap<Activity, Integer> precede = initNbPreds(contraintes);
-        HashMap<Activity, Integer> edt = new HashMap<Activity, Integer>();
-        int heure = 0;
+		while(nbrPredecesseurs.size() > 0) {
+			Activity actZero = null;
 
+			for (Map.Entry<Activity, Integer> entry : nbrPredecesseurs.entrySet()) {
+				if (entry.getValue() == 0){ // si l'activité a zero prédécesseur
+					actZero = entry.getKey(); // met l'activité dans une variable (= on la sélectionne)
+					break; // arréte la boucle si il trouve une activité à 0 prédécesseur
+				}
+			}
 
-        while(precede.size() > 0){
+			// Si on a aucune activité avec 0 prédécesseur on arrête car aucune plan n'est possible
+			if (actZero == null){
+				return null;
+			}
 
-            Activity actZero = null;
-            for (Map.Entry<Activity, Integer> emploiAct : precede.entrySet()){
+			scheduleActivity(actZero, heure, contraintes, edt, nbrPredecesseurs);
+			heure += actZero.getDuree();
+		}
 
-                if (emploiAct.getValue() == 0){ // trouve une activité à zero
-                    actZero = emploiAct.getKey(); //met l'actvité dans une variable
-                    break; //arrété la boucle si il trouve une activité à 0
-                }
-            }
-
-            if (actZero == null){
-                return null;
-            }
-
-            scheduleActivity(actZero, heure, contraintes, edt, precede);
-            heure += actZero.getDuree();
-        }
-
-        return edt;
-    }
+		return edt;
+	}
 }

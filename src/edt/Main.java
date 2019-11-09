@@ -4,8 +4,11 @@ import edt.activity.*;
 import edt.constraints.*;
 import edt.constraints.utils.*;
 import edt.tests.UnitTest;
+
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 	public static void main(String[] args){
