@@ -35,6 +35,16 @@ public class Activity {
 
 
 	/**
+	* Change la description de l'activité
+	*
+	* @param desc La description de l'activité
+	*/
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+
+	/**
 	* Récupère la durée de l'activité
 	*
 	* @return La durée de l'activité
@@ -42,6 +52,17 @@ public class Activity {
 	public int getDuree() {
 		return this.duree;
 	}
+
+
+	/**
+	* Change la durée de l'activité
+	*
+	* @param duree La durée de l'activité
+	*/
+	public void setDuree(int duree) {
+		this.duree = duree;
+	}
+
 
 	@Override
 	public String toString() {
