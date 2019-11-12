@@ -41,6 +41,10 @@ public abstract class BinaryConstraint implements Constraint {
 
 	@Override
 	public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+		if(!edt.containsKey(this.getFirstActivity()) || !edt.containsKey(this.getSecondActivity())) {
+			return false;
+		}
+
 		return isSatisfied(edt.get(this.getFirstActivity()),edt.get(this.getSecondActivity()));
 	}
 
