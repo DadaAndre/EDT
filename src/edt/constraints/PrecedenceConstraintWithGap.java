@@ -42,7 +42,7 @@ public class PrecedenceConstraintWithGap extends PrecedenceConstraint {
 
 	@Override
 	public String toString() {
-		return this.getFirstActivity().getDesc() + " avec une pause de " + this.gap + "minutes avant " + this.getSecondActivity().getDesc();
+		return this.getFirstActivity().getDesc() + " avec une pause de " + this.gap + " minutes avant " + this.getSecondActivity().getDesc();
 	}
 
 }
