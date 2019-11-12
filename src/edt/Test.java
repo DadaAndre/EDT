@@ -7,7 +7,7 @@ import edt.tests.UnitTest;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-public class Main {
+public class Test {
 	public static void main(String[] args){
 
 		//Création des activités
