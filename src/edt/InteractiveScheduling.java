@@ -3,6 +3,9 @@ package edt;
 import edt.activity.Activity;
 import edt.constraints.*;
 
+import java.text.ParseException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -10,6 +13,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InteractiveScheduling {
+
+	private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 	private static Scanner scanner;
 
@@ -267,7 +272,7 @@ public class InteractiveScheduling {
 		System.out.println();
 		InteractiveScheduling.showActivities();
 		System.out.println();
-		
+
 		int activite1Index = InteractiveScheduling.scanner.nextInt();
 		int activite2Index = InteractiveScheduling.scanner.nextInt();
 
@@ -320,11 +325,106 @@ public class InteractiveScheduling {
 			return;
 		}
 
-		InteractiveScheduling.constraints.remove(contrainteIndex);
+		InteractiveScheduling.constraints.remove(contrainteIndex-1);
 	}
 
 	private static void manageScheduleMenu() {
+		System.out.println("");
+		int choice = 0;
 
+		do {
+			System.out.println("========== Modification de l'emploi du temps ==========");
+			System.out.println("1. Afficher l'emploi du temps");
+			System.out.println("2. Changer une heure");
+			System.out.println("3. Enlever une activité plannifié");
+			System.out.println("9. Retour");
+
+			choice = InteractiveScheduling.scanner.nextInt();
+			System.out.println("");
+
+			if(choice == 1) {
+				InteractiveScheduling.showSchedule();
+			} else if(choice == 2) {
+				InteractiveScheduling.scheduleActivity();
+			} else if(choice == 3) {
+				InteractiveScheduling.deleteScheduledActivity();
+			} else if(choice != 9) {
+				System.out.println("Le choix fait est invalide");
+			}
+
+			System.out.println();
+		} while(choice != 9);
+	}
+
+	private static void showSchedule() {
+		if(InteractiveScheduling.activities.size() == 0) {
+			System.out.println("Aucun emploi du temps n'existe car il n'y a aucune activité");
+			return;
+		}
+
+		int i = 1;
+		for(Activity a : InteractiveScheduling.activities) {
+			if(InteractiveScheduling.schedule.containsKey(a))
+				System.out.println(i + " - " + a + " : " + InteractiveScheduling.dateFormat.format(InteractiveScheduling.schedule.get(a).getTime()));
+			else
+				System.out.println(i + " - " + a + " : Non plannifié");
+
+			i++;
+		}
+	}
+
+	private static void scheduleActivity() {
+		if(InteractiveScheduling.activities.size() == 0) {
+			System.out.println("Aucune plannification n'est possible car il n'y a aucune activité");
+			return;
+		}
+
+		InteractiveScheduling.showSchedule();
+		System.out.println();
+
+		System.out.println("Quelle activité voulez vous plannifier : ");
+		int choix = InteractiveScheduling.scanner.nextInt();
+
+		if(choix < 1 || choix-1 >= InteractiveScheduling.activities.size()) {
+			System.out.println("L'activité n'existe pas");
+			return;
+		}
+
+		InteractiveScheduling.clearBuffer();
+		System.out.println("Entrez la date au format dd/MM/yyyy :");
+		String date = InteractiveScheduling.scanner.nextLine();
+		System.out.println("Entrez l'heure au format HH:mm :");
+		String heure = InteractiveScheduling.scanner.nextLine();
+
+		GregorianCalendar calendar = new GregorianCalendar();
+		try {
+			calendar.setTime(InteractiveScheduling.dateFormat.parse(date + " " + heure));
+		} catch(ParseException e) {
+			System.out.println("Le format de la date ou l'heure n'a pas été respecté");
+			return;
+		}
+
+		InteractiveScheduling.schedule.put(InteractiveScheduling.activities.get(choix-1), calendar);
+	}
+
+	private static void deleteScheduledActivity() {
+		if(InteractiveScheduling.activities.size() == 0) {
+			System.out.println("Aucune plannification n'est possible car il n'y a aucune activité");
+			return;
+		}
+
+		InteractiveScheduling.showSchedule();
+		System.out.println();
+
+		System.out.println("Quelle activité voulez vous enlever du planning : ");
+		int choix = InteractiveScheduling.scanner.nextInt();
+
+		if(choix < 1 || choix-1 >= InteractiveScheduling.activities.size()) {
+			System.out.println("L'activité n'existe pas");
+			return;
+		}
+
+		InteractiveScheduling.schedule.remove(InteractiveScheduling.activities.get(choix-1));
 	}
 
 	private static void verify() {
