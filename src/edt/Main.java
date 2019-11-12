@@ -4,6 +4,7 @@ import edt.activity.*;
 import edt.constraints.*;
 import edt.constraints.utils.*;
 import edt.tests.UnitTest;
+import edt.scheduler.*;
 
 import java.util.Arrays;
 import java.util.GregorianCalendar;

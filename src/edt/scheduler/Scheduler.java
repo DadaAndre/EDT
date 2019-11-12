@@ -1,4 +1,8 @@
-package fil;
+package edt.scheduler;
+
+import edt.activity.Activity;
+import edt.constraints.Constraint;
+import edt.constraints.PrecedenceConstraint;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +19,8 @@ public class Scheduler {
 		* Créer une liste de contrainte afin de compter le nombre de predecesseurs de chaque activités.
 		*
 		* @param contraintes liste de PrecedenceConstraint créer à partir d'activité definie
+		* @return nbrPredecesseurs retourne une HashMap comprenant une activité et le nombre de ses prédécesseurs
+
 		*/
 		HashMap<Activity, Integer> nbrPredecesseurs = new HashMap<>();
 
@@ -32,9 +38,6 @@ public class Scheduler {
 		}
 
 		return nbrPredecesseurs;
-		/**
-		* @return nbrPredecesseurs retourne une HashMap comprenant une activité et le nombre de ses prédécesseurs
-		*/
 	}
 
 	//ajoute l'activité dans l'edt et réduit de -1 ses prédécesseurs
@@ -66,6 +69,7 @@ public class Scheduler {
 		/**
 		* méthode qui construit l'emploi du temps en fonction des contraintes
 		* @param contraintes liste de de contraintes
+		* @return retourne l'emploi du temps complet
 		*/
 		HashMap<Activity, Integer> nbrPredecesseurs = initNbPreds(contraintes);
 		HashMap<Activity, Integer> edt = new HashMap<Activity, Integer>();
@@ -91,8 +95,5 @@ public class Scheduler {
 		}
 
 		return edt;
-		/**
-		* @return retourne l'emploi du temps complet
-		*/
 	}
 }
