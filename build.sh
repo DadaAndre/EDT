@@ -1,11 +1,23 @@
 #!/bin/sh
 
 showCommand() {
-	echo "Usage : $0 <build|run|clean|javadoc|test>" 1>&2
+	echo "Usage : $0 <clean|build|run|test|javadoc|deploy>" 1>&2
 	exit 1
 }
 
+buildProject() {
+	echo '>build'
+
+	if [ ! -d 'build' ]; then
+		mkdir build
+	fi
+
+	javac -cp 'src:libs/scheduleio.jar' -d build src/edt/*.java -Xlint
+}
+
 cleanProject() {
+	echo '>clean'
+
 	if [ -d 'build' ]; then
 		rm -rf build/
 	fi
@@ -15,16 +27,20 @@ cleanProject() {
 	fi
 }
 
-buildProject() {
-	if [ ! -d 'build' ]; then
-		mkdir build
+createJavadoc() {
+	echo '>javadoc'
+
+	if [ ! -d 'javadoc' ]; then
+		mkdir javadoc
 	fi
 
-	javac -cp 'src:libs/scheduleio.jar' -d build src/edt/*.java -Xlint
+	javadoc -subpackages edt -private -d javadoc -cp src
 }
 
 runProject() {
 	buildProject
+
+	echo '>run'
 
 	java -cp 'build:libs/scheduleio.jar' edt.InteractiveScheduling
 }
@@ -32,16 +48,18 @@ runProject() {
 testProject() {
 	buildProject
 
+	echo '>test'
+
 	java -cp 'build:libs/scheduleio.jar' edt.Test
 }
 
-createJavadoc() {
-	if [ ! -d 'javadoc' ]; then
-		mkdir javadoc
-	fi
+deployProject() {
+	echo '>deploy'
 
-	javadoc -subpackages edt -private -d javadoc -cp src
+	zip fil_rouge_poo_groupe_40.zip -r src README.md
 }
+
+
 
 if [ $# -lt 1 ]; then
 	showCommand
@@ -59,6 +77,8 @@ do
 		runProject
 	elif [ $1 = "test" ]; then
 		testProject
+	elif [ $1 = "deploy" ]; then
+		deployProject
 	else
 		showCommand
 	fi
