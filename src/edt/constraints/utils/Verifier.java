@@ -1,10 +1,12 @@
 package edt.constraints.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import java.util.GregorianCalendar;
 import edt.activity.Activity;
 import edt.constraints.*;
-import java.util.GregorianCalendar;
+
 
 /**
 * Permet de verifier qu'un ensemble de contraintes est satisfait par un emploi du temps
@@ -47,6 +49,25 @@ public class Verifier {
 		}
 
 		return true;
+	}
+	/**
+	* Teste chacune des contraintes si elles sont satisfaites ou non
+	*
+	* @param edt L'emploi du temps
+	* @return la liste des contraintes echouées
+	*/
+	public List<Constraint> listOfFailConstraint(HashMap<Activity,GregorianCalendar> edt) {
+		List<Constraint> failConstraint = new ArrayList<>();
+		for(Constraint c : listOfConstraint) { //on essaye chaque contraintes
+
+			if(c.isSatisfiedBySchedule(edt) == false) {
+				/* si une condition est fausse,
+				 * on ajoute a une liste la contrainte qui n'est pas satisfaite
+				 */
+				failConstraint.add(c);
+			}
+		}
+		return failConstraint;
 	}
 
 
