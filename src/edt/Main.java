@@ -6,6 +6,7 @@ import edt.constraints.utils.*;
 import edt.tests.UnitTest;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import edt.scheduler.RandomScheduler;
 
 public class Main {
 	public static void main(String[] args){
@@ -31,6 +32,8 @@ public class Main {
 		PrecedenceConstraintWithGap contrainteWithGap = new PrecedenceConstraintWithGap(options, ip, 60);
 		PrecedenceConstraintWithGap contrainteWithGap2 = new PrecedenceConstraintWithGap(options, ip, 30);
 		MeetConstraint meetConstraint = new MeetConstraint(sport, ip);
+		PrecedenceConstraint contrainte2 = new PrecedenceConstraint (marche, devoirs);
+		PrecedenceConstraint contrainte3 = new PrecedenceConstraint (ip, devoirs);
 
 		//Création d'un emploi du temps et ajout des activités avec l'heure à laquelle elles commencent
 		HashMap<Activity, GregorianCalendar> emploiDuTemps = new HashMap<Activity, GregorianCalendar>();
@@ -48,6 +51,27 @@ public class Main {
 		verif.addConstraint(new PrecedenceConstraintWithGap(options, marche, 120));
 		verif.addConstraint(new PrecedenceConstraint(marche, ip));
 		verif.addConstraint(new PrecedenceConstraint(ip, devoirs));
+
+		//Initialisation d'un emploi du temps de manière aléatoire
+		RandomScheduler edtAleatoire = new RandomScheduler();
+
+		//Ajout des activités à cet emploi du temps
+		edtAleatoire.addActivity(sport);
+	   	edtAleatoire.addActivity(options);
+	   	edtAleatoire.addActivity(marche);
+	   	edtAleatoire.addActivity(ip);
+	   	edtAleatoire.addActivity(devoirs);
+
+		//Ajout des contrainte a cet emploi du temps
+		edtAleatoire.addConstraint(contrainte);
+		edtAleatoire.addConstraint(contrainte2);
+		edtAleatoire.addConstraint(contrainte3);
+	   	edtAleatoire.addConstraint(contrainteWithGap);
+	   	edtAleatoire.addConstraint(contrainteWithGap2);
+
+		//géneration de plusieurs emploi du temps (ici 25) de manière aléatoire satisfaisant le plus de contraintes
+		HashMap<Activity, GregorianCalendar> bestScheduler = edtAleatoire.edtWithMostSatisfiedConstraint(25);
+		System.out.println("cet activité respecte "+ edtAleatoire.numberOfSatisfiedConstraint(bestScheduler) + " contraintes");
 
 		//--------------------------------------- TESTS ---------------------------------------
 		UnitTest.setTestLabel("PrecedenceConstraint");
