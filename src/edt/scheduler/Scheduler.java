@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* Regarde si un plan peut être créer en prenant en compte plusieurs contraintes
+* Plannifie un emploi du temps en prenant en compte plusieurs contraintes de précedence
 */
 public class Scheduler {
 
-	
+
 	/**
-	* Créer une liste de contrainte afin de compter le nombre de predecesseurs de chaque activités.
+	* Compte le nombre de prédécesseurs de chaque activité selon les contraintes fournies en paramètre
 	*
-	* @param contraintes liste de PrecedenceConstraint créer à partir d'activité definie
-	* @return nbrPredecesseurs retourne une HashMap comprenant une activité et le nombre de ses prédécesseurs
+	* @param contraintes Liste des contraintes de précédence
+	* @return Retourne une HashMap comprenant une activité et le nombre de prédécesseurs qu'elle a
 
 	*/
 	private HashMap<Activity, Integer> initNbPreds(List<PrecedenceConstraint> contraintes) {
@@ -42,13 +42,13 @@ public class Scheduler {
 
 
 	/**
-	* ajoute les activités un par une dans l'emploi du temps en fonction de son nombre de prédecesseurs.
+	* Plannifie une activité dans l'emploi du temps
 	*
-	* @param act activité  à ajouter dans l'emploi du temps dont le nombre de prédécesseur est à zéro
-	* @param heure nombre de minutes écoulé depuis la toute premiere activité ajouté dans l'emploi du temps
-	* @param contraintes liste de contrainte
-	* @param edt emploi du temps où les activités sont ajouté
-	* @param nbrPredecesseurs HashMap dont les activités, non encore implenté dans l'edt, sont enregistré avec le nombre de leurs predecesseurs (valeur > 0: pas encore ajouter dans l'edt, valeur = 0: activité qui est en train d'être rajouter dans l'edt)
+	* @param act L'activité à ajouter dans l'emploi du temps
+	* @param heure L'heure à laquelle on la plannifie
+	* @param contraintes Liste des contraintes de précédence
+	* @param edt Emploi du temps où les activités sont ajoutées
+	* @param nbrPredecesseurs HashMap comprenant une activité et le nombre de prédécesseurs qu'elle a
 	*/
 	private void scheduleActivity(Activity act, int heure, List<PrecedenceConstraint> contraintes, HashMap<Activity, Integer> edt, HashMap<Activity, Integer> nbrPredecesseurs) {
 
@@ -67,9 +67,9 @@ public class Scheduler {
 
 
 	/**
-	* méthode qui construit l'emploi du temps en fonction des contraintes
-	* @param contraintes liste de de contraintes
-	* @return retourne l'emploi du temps complet
+	* Génère l'emploi du temps en fonction des contraintes
+	* @param contraintes Liste des contraintes de précédence
+	* @return Retourne l'emploi du temps complet si il est possible, null sinon
 	*/
 	public HashMap<Activity, Integer> computeSchedule(List<PrecedenceConstraint> contraintes) {
 		HashMap<Activity, Integer> nbrPredecesseurs = initNbPreds(contraintes);
@@ -80,14 +80,17 @@ public class Scheduler {
 			Activity actZero = null;
 
 			for (Map.Entry<Activity, Integer> entry : nbrPredecesseurs.entrySet()) {
-				if (entry.getValue() == 0){ // si l'activité a zero prédécesseur
-					actZero = entry.getKey(); // met l'activité dans une variable (= on la sélectionne)
-					break; // arréte la boucle si il trouve une activité à 0 prédécesseur
+				// si l'activité a zéro prédécesseur
+				if (entry.getValue() == 0) {
+					// met l'activité dans une variable (= on la sélectionne)
+					actZero = entry.getKey();
+					// stop la boucle si il trouve une activité à 0 prédécesseur
+					break;
 				}
 			}
 
-			// Si on a aucune activité avec 0 prédécesseur on arrête car aucune plan n'est possible
-			if (actZero == null){
+			// Si on a aucune activité avec 0 prédécesseur, on arrête car aucun plan n'est possible
+			if (actZero == null) {
 				return null;
 			}
 
