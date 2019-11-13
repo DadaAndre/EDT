@@ -83,13 +83,13 @@ public class Main {
 		PrecedenceConstraint c2 = new PrecedenceConstraint (devoirs, marche);
 		PrecedenceConstraint c3 = new PrecedenceConstraint (options, marche);
 		List<PrecedenceConstraint> allConstraints = Arrays.asList (c1, c2, c3); //creation d'une liste de contrainte
+		List<PrecedenceConstraint> allConstraintsFail = Arrays.asList (c1, c2, c3, new PrecedenceConstraint (marche, options)); // contrainte de precedence inverse de c3
 
 		Scheduler sheduler = new Scheduler();//class Scheduler
 
-		UnitTest.setTestLabel("Schedule");
-		UnitTest.isFalse(sheduler.computeSchedule(allConstraints) == null);//contraintes non organisable dans l'emploi du temps
-		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null);//contraintes organisable, creation de l'emploi du temps
-		System.out.println("Un plan trouvé : " + sheduler.computeSchedule(allConstraints));//affichage de l'emploi du temps
+		UnitTest.setTestLabel("Scheduler");
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
 
 
 		UnitTest.summary();
