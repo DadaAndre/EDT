@@ -4,8 +4,12 @@ import edt.activity.*;
 import edt.constraints.*;
 import edt.constraints.utils.*;
 import edt.tests.UnitTest;
+import edt.scheduler.*;
+
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 	public static void main(String[] args){
@@ -72,6 +76,21 @@ public class Main {
 		UnitTest.isTrue(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 		verif.addConstraint(new PrecedenceConstraint(devoirs, ip)); // On ajoute une contrainte non valable
 		UnitTest.isFalse(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
+
+
+		// Pour aller plus loin: ordonnancement d'activité
+		PrecedenceConstraint c1 = new PrecedenceConstraint (ip, devoirs);
+		PrecedenceConstraint c2 = new PrecedenceConstraint (devoirs, marche);
+		PrecedenceConstraint c3 = new PrecedenceConstraint (options, marche);
+		List<PrecedenceConstraint> allConstraints = Arrays.asList (c1, c2, c3); //creation d'une liste de contrainte
+		List<PrecedenceConstraint> allConstraintsFail = Arrays.asList (c1, c2, c3, new PrecedenceConstraint (marche, options)); // contrainte de precedence inverse de c3
+
+		Scheduler sheduler = new Scheduler();//class Scheduler
+
+		UnitTest.setTestLabel("Scheduler");
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
+
 
 		UnitTest.summary();
 	}
