@@ -35,6 +35,20 @@ public class Main {
 		PrecedenceConstraintWithGap contrainteWithGap = new PrecedenceConstraintWithGap(options, ip, 60);
 		PrecedenceConstraintWithGap contrainteWithGap2 = new PrecedenceConstraintWithGap(options, ip, 30);
 		MeetConstraint meetConstraint = new MeetConstraint(sport, ip);
+		Constraint constraintTrue = new Constraint() {
+			@Override
+			public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+				return true;
+			}
+		};
+		Constraint constraintFalse = new Constraint() {
+			@Override
+			public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+				return false;
+			}
+		};
+		NegationConstraint negationConstraintTrue = new NegationConstraint(constraintTrue);
+		NegationConstraint negationConstraintFalse = new NegationConstraint(constraintFalse);
 
 		//Création d'un emploi du temps et ajout des activités avec l'heure à laquelle elles commencent
 		HashMap<Activity, GregorianCalendar> emploiDuTemps = new HashMap<Activity, GregorianCalendar>();
@@ -72,6 +86,10 @@ public class Main {
 		UnitTest.isTrue(meetConstraint.isSatisfied(date1_9h, date1_11h)); //debut de la 2nde activité en même temps que la fin de la 1ére
 		UnitTest.isFalse(meetConstraint.isSatisfied(date1_9h, date1_12h)); //debut de la 2nde activité trop tard que la fin de la 1ère
 
+		UnitTest.setTestLabel("NegationConstraint");
+		UnitTest.isFalse(negationConstraintTrue.isSatisfiedBySchedule(emploiDuTemps));
+		UnitTest.isTrue(negationConstraintFalse.isSatisfiedBySchedule(emploiDuTemps));
+
 		UnitTest.setTestLabel("Verifier");
 		UnitTest.isTrue(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 		verif.addConstraint(new PrecedenceConstraint(devoirs, ip)); // On ajoute une contrainte non valable
@@ -90,7 +108,6 @@ public class Main {
 		UnitTest.setTestLabel("Scheduler");
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
-
 
 		UnitTest.summary();
 	}
