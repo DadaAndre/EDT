@@ -64,6 +64,9 @@ public class InteractiveScheduling {
 		scanner.close();
 	}
 
+	/* ==================================================
+							Activités
+	   ================================================== */
 	private static void manageActivitiesMenu() {
 		System.out.println("");
 		int choice = 0;
@@ -208,6 +211,9 @@ public class InteractiveScheduling {
 		InteractiveScheduling.activities.remove(activityIndex-1);
 	}
 
+	/* ==================================================
+							Contraintes
+	   ================================================== */
 	private static void manageConstraintsMenu() {
 		System.out.println("");
 		int choice = 0;
@@ -328,6 +334,9 @@ public class InteractiveScheduling {
 		InteractiveScheduling.constraints.remove(contrainteIndex-1);
 	}
 
+	/* ==================================================
+						Emploi du temps
+	   ================================================== */
 	private static void manageScheduleMenu() {
 		System.out.println("");
 		int choice = 0;
@@ -427,6 +436,10 @@ public class InteractiveScheduling {
 		InteractiveScheduling.schedule.remove(InteractiveScheduling.activities.get(choix-1));
 	}
 
+
+	/* ==================================================
+					Verification emploi du temps
+	   ================================================== */
 	private static void verify() {
 		int i = 1;
 		boolean isScheduleValid = true;
