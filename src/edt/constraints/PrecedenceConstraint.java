@@ -33,6 +33,6 @@ public class PrecedenceConstraint extends BinaryConstraint {
 
 	@Override
 	public String toString() {
-		return this.getFirstActivity() + " avant " + this.getSecondActivity();
+		return this.getFirstActivity().getDesc() + " avant " + this.getSecondActivity().getDesc();
 	}
 }

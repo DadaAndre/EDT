@@ -28,4 +28,10 @@ public class MeetConstraint extends BinaryConstraint {
 		*/
 		return dateFinAct1.compareTo(dateDebutAct2) == 0;
 	}
+
+
+	@Override
+	public String toString() {
+		return this.getSecondActivity().getDesc() + " quand " + this.getFirstActivity().getDesc() + " se termine";
+	}
 }

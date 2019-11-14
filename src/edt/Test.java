@@ -4,11 +4,14 @@ import edt.activity.*;
 import edt.constraints.*;
 import edt.constraints.utils.*;
 import edt.tests.UnitTest;
+import edt.scheduler.*;
+
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import edt.scheduler.RandomScheduler;
+import java.util.List;
 
-public class Main {
+public class Test {
 	public static void main(String[] args){
 
 		//Création des activités
@@ -34,6 +37,20 @@ public class Main {
 		MeetConstraint meetConstraint = new MeetConstraint(sport, ip);
 		PrecedenceConstraint contrainte2 = new PrecedenceConstraint (marche, devoirs);
 		PrecedenceConstraint contrainte3 = new PrecedenceConstraint (ip, devoirs);
+		Constraint constraintTrue = new Constraint() {
+			@Override
+			public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+				return true;
+			}
+		};
+		Constraint constraintFalse = new Constraint() {
+			@Override
+			public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+				return false;
+			}
+		};
+		NegationConstraint negationConstraintTrue = new NegationConstraint(constraintTrue);
+		NegationConstraint negationConstraintFalse = new NegationConstraint(constraintFalse);
 
 		//Création d'un emploi du temps et ajout des activités avec l'heure à laquelle elles commencent
 		HashMap<Activity, GregorianCalendar> emploiDuTemps = new HashMap<Activity, GregorianCalendar>();
@@ -92,10 +109,28 @@ public class Main {
 		UnitTest.isTrue(meetConstraint.isSatisfied(date1_9h, date1_11h)); //debut de la 2nde activité en même temps que la fin de la 1ére
 		UnitTest.isFalse(meetConstraint.isSatisfied(date1_9h, date1_12h)); //debut de la 2nde activité trop tard que la fin de la 1ère
 
+		UnitTest.setTestLabel("NegationConstraint");
+		UnitTest.isFalse(negationConstraintTrue.isSatisfiedBySchedule(emploiDuTemps));
+		UnitTest.isTrue(negationConstraintFalse.isSatisfiedBySchedule(emploiDuTemps));
+
 		UnitTest.setTestLabel("Verifier");
 		UnitTest.isTrue(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 		verif.addConstraint(new PrecedenceConstraint(devoirs, ip)); // On ajoute une contrainte non valable
 		UnitTest.isFalse(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
+
+
+		// Pour aller plus loin: ordonnancement d'activité
+		PrecedenceConstraint c1 = new PrecedenceConstraint (ip, devoirs);
+		PrecedenceConstraint c2 = new PrecedenceConstraint (devoirs, marche);
+		PrecedenceConstraint c3 = new PrecedenceConstraint (options, marche);
+		List<PrecedenceConstraint> allConstraints = Arrays.asList (c1, c2, c3); //creation d'une liste de contrainte
+		List<PrecedenceConstraint> allConstraintsFail = Arrays.asList (c1, c2, c3, new PrecedenceConstraint (marche, options)); // contrainte de precedence inverse de c3
+
+		Scheduler sheduler = new Scheduler();//class Scheduler
+
+		UnitTest.setTestLabel("Scheduler");
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
+		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
 
 		UnitTest.summary();
 	}
