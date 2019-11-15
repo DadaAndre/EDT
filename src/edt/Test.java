@@ -132,6 +132,15 @@ public class Test {
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
 
+		UnitTest.setTestLabel("DisjunctionConstraint");
+		PrecedenceConstraint co1 = new PrecedenceConstraint (options, sport);
+		PrecedenceConstraint co2 = new PrecedenceConstraint (ip, marche);
+
+		DisjunctionConstraint disFalse = new DisjunctionConstraint(co1,co2);
+		UnitTest.isFalse(disFalse.isSatisfiedBySchedule(emploiDuTemps));
+		DisjunctionConstraint disTrue = new DisjunctionConstraint(c1,c2);
+		UnitTest.isTrue(disTrue.isSatisfiedBySchedule(emploiDuTemps));
+
 		UnitTest.summary();
 	}
 
