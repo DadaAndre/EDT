@@ -17,6 +17,7 @@ L'application devra :
 
 Le projet comporte 1 dossier :
 
+- libs → Contient les dépendances en .jar du projet 
 - src → Contient le code source de l'application
 
 # Mode d'emploi
@@ -32,4 +33,3 @@ Ce projet étant réalisé en groupe, voici la liste des différentes personnes 
 - 21806986 Auréline DEROUIN - L2 Info 1A - Groupe CC 40
 - 21909920 Jason MARTIN - L2 Info 1A - Groupe CC 40
 - 21810751 Maxime THOMAS - L2 Info 1A - Groupe CC 40
-
