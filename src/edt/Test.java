@@ -86,9 +86,16 @@ public class Test {
 	   	edtAleatoire.addConstraint(contrainteWithGap);
 	   	edtAleatoire.addConstraint(contrainteWithGap2);
 
+		
 		//géneration de plusieurs emploi du temps (ici 25) de manière aléatoire satisfaisant le plus de contraintes
 		HashMap<Activity, GregorianCalendar> bestScheduler = edtAleatoire.edtWithMostSatisfiedConstraint(25);
 		System.out.println("cet activité respecte "+ edtAleatoire.numberOfSatisfiedConstraint(bestScheduler) + " contraintes");
+		
+		//Test de MaxSpanConstraint		
+		MaxSpanConstraint contrainteEnsemble = new MaxSpanConstraint(90);
+		contrainteEnsemble.add(sport);
+		contrainteEnsemble.add(marche);
+		contrainteEnsemble.add(devoirs);
 
 		//--------------------------------------- TESTS ---------------------------------------
 		UnitTest.setTestLabel("PrecedenceConstraint");
@@ -131,8 +138,17 @@ public class Test {
 		UnitTest.setTestLabel("Scheduler");
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraints) != null); //contraintes organisables en un l'emploi du temps
 		UnitTest.isTrue(sheduler.computeSchedule(allConstraintsFail) == null); // contraintes non organisable, aucun emploi du temps possible
+		
+		UnitTest.setTestLabel("MaxSpanConstraint");
+		UnitTest.isFalse(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
+		contrainteEnsemble.setDureeMax(10*60);
+		UnitTest.isTrue(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
+		contrainteEnsemble.setDureeMax(10*60-1);
+		UnitTest.isFalse(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
 
 		UnitTest.summary();
 	}
+	
+	
 
 }
