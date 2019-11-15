@@ -15,7 +15,7 @@ L'application devra :
 
 # Structuration du projet
 
-Le projet comporte 1 dossier :
+Le projet comporte 2 dossiers :
 
 - libs → Contient les dépendances en .jar du projet
 - src → Contient le code source de l'application
@@ -35,6 +35,10 @@ Pour compiler le projet, les actions suivantes sont nécessaires :
 
 Notre projet contient 3 classes éxécutables :
 
+- Main
+- InteractiveScheduling
+- Test
+
 ### Main
 
 Il s'agit du programme principal. Il prend en paramètre 2 fichiers sans espace dans le chemin (l'un pour les activités, l'autre pour les contraintes) et génère le meilleur emploi du temps possible.
@@ -46,7 +50,7 @@ java -cp "build:libs/scheduleio.jar" edt.Main activities.txt constraints.txt
 
 ### InteractiveScheduling
 
-Permet d'entrer les activités, les contraintes, ainsi que l'emploi du temps en mode console. On peut ensuite vérifier la cohérence de l'emploi du temps réalisé.
+Permet d'entrer des activités, des contraintes, ainsi qu'un emploi du temps en mode console. On peut ensuite vérifier la cohérence de l'emploi du temps réalisé.
 
 La commande est alors la suivante :
 ```
