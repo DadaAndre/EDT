@@ -20,12 +20,12 @@ public class MaxSpanConstraint implements Constraint {
 	/**
 	 * Liste des activités
 	 */
-	private ArrayList<Activity> liste;
+	private ArrayList<Activity> activities;
 
 
 	public MaxSpanConstraint(int dureeMax) {
 		this.dureeMax = dureeMax;
-		this.liste = new ArrayList<>();
+		this.activities = new ArrayList<>();
 	}
 
 
@@ -34,7 +34,7 @@ public class MaxSpanConstraint implements Constraint {
 		Activity plusTard = null;
 		GregorianCalendar finPlusTard = new GregorianCalendar();
 
-		for(Activity a : liste) {
+		for(Activity a : this.activities) {
 			// On regarde quand se finit l'activité en cours
 			GregorianCalendar finA = new GregorianCalendar();
 			finA.setTime(edt.get(a).getTime());
@@ -73,7 +73,7 @@ public class MaxSpanConstraint implements Constraint {
 	 * @param a L'activité à ajouter
  	 */
 	public void add(Activity a) {
-		this.liste.add(a);
+		this.activities.add(a);
 	}
 
 
@@ -86,4 +86,17 @@ public class MaxSpanConstraint implements Constraint {
 		this.dureeMax = dureeMax;
 	}
 
+
+	@Override
+	public String toString() {
+		String str = "";
+		for(Activity a : this.activities) {
+			str += a.getDesc() + ", ";
+		}
+
+		str = str.substring(0, str.length() - 2);
+		str += " en moins de " + this.dureeMax + " mins";
+
+		return str;
+	}
 }
