@@ -2,6 +2,7 @@ package edt;
 
 import edt.activity.Activity;
 import edt.constraints.*;
+import edt.constraints.utils.Verifier;
 
 import java.text.ParseException;
 import java.text.DateFormat;
@@ -441,25 +442,25 @@ public class InteractiveScheduling {
 					Verification emploi du temps
 	   ================================================== */
 	private static void verify() {
-		int i = 1;
-		boolean isScheduleValid = true;
-		for(Constraint c : constraints) {
-			if(!c.isSatisfiedBySchedule(InteractiveScheduling.schedule)) {
-				if(isScheduleValid) {
-					System.out.println("Contraintes non satisfaites : ");
-				}
-
-				System.out.println(i + " - " + c);
-				isScheduleValid = false;
-			}
-
-			i++;
+		Verifier verifier = new Verifier();
+		for(Constraint c : InteractiveScheduling.constraints) {
+			verifier.addConstraint(c);
 		}
 
-		if(isScheduleValid) {
+		List<Constraint> listOfFailConstraint = verifier.listOfFailConstraint(InteractiveScheduling.schedule);
+
+		if(listOfFailConstraint.size() == 0) {
 			System.out.println("L'emploi du temps est valide");
 		} else {
-			System.out.println("L'emploi du temps n'est pas valide");
+			System.out.println("Contraintes non satisfaites : ");
+			int i = 1;
+			for(Constraint c : listOfFailConstraint) {
+				System.out.println(i + " - " + c);
+				i++;
+			}
+
+			System.out.println("");
+			System.out.println("L'emploi du temps est invalide");
 		}
 	}
 
