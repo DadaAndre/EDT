@@ -34,13 +34,19 @@ public class InteractiveScheduling {
 
 		Activity a = new Activity("123", 123);
 		Activity b = new Activity("456", 456);
+		Activity css = new Activity("456", 456);
 		InteractiveScheduling.activities.add(a);
 		InteractiveScheduling.activities.add(b);
+		InteractiveScheduling.activities.add(css);
 		MaxSpanConstraint c = new MaxSpanConstraint(90);
+		MaxSpanConstraint c2 = new MaxSpanConstraint(90);
 		c.add(a);
 		c.add(b);
+		c2.add(a);
+		c2.add(b);
 		c.add(a);
 		InteractiveScheduling.constraints.add(c);
+		InteractiveScheduling.constraints.add(c2);
 
 		InteractiveScheduling.scanner = new Scanner(System.in);
 
@@ -230,7 +236,7 @@ public class InteractiveScheduling {
 
 			return
 				InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getFirstConstraint())
-				|| InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getSecondConstraint());
+				|| InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getSecondConstraint());
 		} else if(c instanceof NegationConstraint) {
 			NegationConstraint negConstraint = (NegationConstraint) c;
 
@@ -354,6 +360,39 @@ public class InteractiveScheduling {
 				System.out.println("Vous devez d'abord ajouter au moins 2 contraintes");
 				return;
 			}
+
+			System.out.println("Choisissez 2 contraintes");
+			System.out.println();
+			InteractiveScheduling.showConstraints();
+			System.out.println();
+
+			int contrainte1Index = InteractiveScheduling.scanner.nextInt();
+			int contrainte2Index = InteractiveScheduling.scanner.nextInt();
+			if(contrainte1Index-1 >= InteractiveScheduling.constraints.size() || contrainte1Index < 1) {
+				System.out.println("Cette contrainte n'existe pas");
+				System.out.println();
+				return;
+			}
+
+			if(contrainte2Index-1 >= InteractiveScheduling.constraints.size() || contrainte2Index < 1) {
+				System.out.println("Cette contrainte n'existe pas");
+				System.out.println();
+				return;
+			}
+
+			if(contrainte1Index == contrainte2Index) {
+				System.out.println("Merci de sélectionner 2 contraintes différentes");
+				System.out.println();
+				return;
+			}
+
+			Constraint selectedConstraint1 = InteractiveScheduling.constraints.get(contrainte1Index-1);
+			Constraint selectedConstraint2 = InteractiveScheduling.constraints.get(contrainte2Index-1);
+
+			InteractiveScheduling.constraints.remove(selectedConstraint1);
+			InteractiveScheduling.constraints.remove(selectedConstraint2);
+
+			InteractiveScheduling.constraints.add(new DisjunctionConstraint(selectedConstraint1, selectedConstraint2));
 		} else if(choix == 6) {
 			if(InteractiveScheduling.constraints.size() < 1) {
 				System.out.println("Vous devez d'abord ajouter au moins 1 contrainte");
