@@ -202,6 +202,7 @@ public class Reader {
 		}
 
 		MaxSpanConstraint maxSpanConstraint = new MaxSpanConstraint(dureeMax);
+		// On commence à 1 car le premier argument est la durée max 
 		for(int i = 1 ; i < args.length ; i++) {
 			if(!this.activities.containsKey(args[i])) {
 				throw new IllegalArgumentException("L'activité avec l'identifiant " + args[i] + " n'existe pas");
