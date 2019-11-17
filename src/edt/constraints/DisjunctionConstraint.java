@@ -42,4 +42,24 @@ public class DisjunctionConstraint implements Constraint {
     public boolean isSatisfiedBySchedule(HashMap<Activity,GregorianCalendar> edt) {
 		return c1.isSatisfiedBySchedule(edt) || c2.isSatisfiedBySchedule(edt);
 	}
+
+
+	/**
+	* Récupère la première contrainte
+	*
+	* @return La première contrainte
+	*/
+	public Constraint getFirstConstraint() {
+		return this.c1;
+	}
+
+
+	/**
+	* Récupère la deuxième contrainte
+	*
+	* @return La deuxième contrainte
+	*/
+	public Constraint getSecondConstraint() {
+		return this.c2;
+	}
 }
