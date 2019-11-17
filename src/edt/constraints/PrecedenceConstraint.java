@@ -1,8 +1,9 @@
 package edt.constraints;
 
-import java.util.HashMap;
 import edt.activity.Activity;
+
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
 * Contrainte binaire satisfaite lorsque la première activité se termine avant que la deuxième ne commence
@@ -20,13 +21,12 @@ public class PrecedenceConstraint extends BinaryConstraint {
 
 	@Override
 	public boolean isSatisfied(GregorianCalendar dateDebutAct1, GregorianCalendar dateDebutAct2) {
-		GregorianCalendar dateFinAct1 = new GregorianCalendar(); //création d'un nouveau calendrier.
-		dateFinAct1.setTime(dateDebutAct1.getTime()); // mettre ce nouveau calendrier à la même date que la première activité.
-		dateFinAct1.add(GregorianCalendar.MINUTE, this.getFirstActivity().getDuree()); //on ajoute à l'heure de la première activité, sa durée.
+		// On récupère la fin de la première activité
+		GregorianCalendar dateFinAct1 = new GregorianCalendar();
+		dateFinAct1.setTime(dateDebutAct1.getTime());
+		dateFinAct1.add(GregorianCalendar.MINUTE, this.getFirstActivity().getDuree());
 
-		/* on compare les deux activités: si la deuxième activité
-		* commence après la fin de la première activité, alors le compareTo est un nombre inferieur à "0".
-		*/
+		// On vérifie si la fin de l'activité se passe avant le début de la seconde
 		return dateFinAct1.compareTo(dateDebutAct2) <= 0;
 	}
 
