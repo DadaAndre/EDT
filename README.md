@@ -72,7 +72,7 @@ Il est possible de générer la Javadoc du code source.
 
 1. Créer un dossier "javadoc" à la racine du projet
 2. Ouvrir un terminal à la racine du projet
-3. Lancer la commande ```javadoc -subpackages edt -private -d javadoc -cp src```
+3. Lancer la commande ```javadoc -subpackages edt -private -d javadoc -cp "src:libs/scheduleio.jar"```
 4. Ouvrir index.html dans le dossier "javadoc"
 
 # Collaborateurs
