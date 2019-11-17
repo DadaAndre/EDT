@@ -1,12 +1,12 @@
 package edt.constraints.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.GregorianCalendar;
 import edt.activity.Activity;
 import edt.constraints.*;
 
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
 /**
 * Permet de verifier qu'un ensemble de contraintes est satisfait par un emploi du temps
@@ -20,7 +20,7 @@ public class Verifier {
 
 
 	public Verifier() {
-		this.listOfConstraint = new ArrayList<>(); //Création d'une ArrayList contenant la liste des contraintes
+		this.listOfConstraint = new ArrayList<>();
 	}
 
 
@@ -40,35 +40,36 @@ public class Verifier {
 	* @param edt L'emploi du temps
 	* @return True si toute les contraintes sont satisfaites, False sinon
 	*/
-	public boolean verify(HashMap<Activity,GregorianCalendar> edt) {
-		for(Constraint c : listOfConstraint) { //on essaye chaque contraintes
-
-			if(c.isSatisfiedBySchedule(edt) == false) { //si une seule condition est fausse, on retourne false
+	public boolean verify(HashMap<Activity, GregorianCalendar> edt) {
+		for(Constraint c : this.listOfConstraint) {
+			// Si une seule condition est fausse, on retourne false
+			if(c.isSatisfiedBySchedule(edt) == false) {
 				return false;
 			}
 		}
 
+		// Si on arrive ici c'est que toutes les contraintes sont satisfaites
 		return true;
 	}
+
+
 	/**
-	* Teste chacune des contraintes si elles sont satisfaites ou non
+	* Récupère la liste des contraintes non statisfaites
 	*
 	* @param edt L'emploi du temps
-	* @return la liste des contraintes echouées
+	* @return La liste des contraintes non statisfaites
 	*/
-	public List<Constraint> listOfFailConstraint(HashMap<Activity,GregorianCalendar> edt) {
+	public List<Constraint> listOfFailConstraint(HashMap<Activity, GregorianCalendar> edt) {
 		List<Constraint> failConstraint = new ArrayList<>();
-		for(Constraint c : listOfConstraint) { //on essaye chaque contraintes
 
+		for(Constraint c : this.listOfConstraint) {
 			if(c.isSatisfiedBySchedule(edt) == false) {
-				/* si une condition est fausse,
-				 * on ajoute a une liste la contrainte qui n'est pas satisfaite
-				 */
+				// Si la contrainte n'est pas satisfaite on l'ajoute a la liste
 				failConstraint.add(c);
 			}
 		}
+
 		return failConstraint;
 	}
-
 
 }
