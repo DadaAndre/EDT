@@ -1,8 +1,9 @@
 package edt.constraints;
 
-import java.util.HashMap;
 import edt.activity.Activity;
+
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
 * Interface commune à toutes les contraintes
