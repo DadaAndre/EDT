@@ -17,6 +17,10 @@ import java.util.Map;
 
 public class Main {
 
+	private static final int ERROR_INVALID_COMMAND_USAGE = 1;
+	private static final int ERROR_FILE_NOT_FOUND = 2;
+	private static final int ERROR_IO_ERROR = 3;
+
 	public static void main(String[] args) {
 		if(args.length < 2 || args.length > 3) {
 			showCommandUsage();
@@ -28,10 +32,10 @@ public class Main {
 			reader = new Reader(args[0], args[1]);
 		} catch(FileNotFoundException e) {
 			System.out.println("Le fichier " + args[0] + " n'existe pas");
-			System.exit(2);
+			System.exit(ERROR_FILE_NOT_FOUND);
 		} catch(IOException e) {
 			System.out.println("Le fichier " + args[0] + " a eu une erreur de lecture");
-			System.exit(3);
+			System.exit(ERROR_IO_ERROR);
 		}
 
 		Collection<Constraint> constraints = null;
@@ -39,10 +43,10 @@ public class Main {
 			constraints = reader.readConstraints();
 		} catch(FileNotFoundException e) {
 			System.out.println("Le fichier " + args[1] + " n'existe pas");
-			System.exit(2);
+			System.exit(ERROR_FILE_NOT_FOUND);
 		} catch(IOException e) {
 			System.out.println("Le fichier " + args[1] + " a eu une erreur de lecture");
-			System.exit(3);
+			System.exit(ERROR_IO_ERROR);
 		}
 
 		for(Activity a : reader.getActivities()) {
@@ -73,7 +77,7 @@ public class Main {
 	public static void showCommandUsage() {
 		System.out.println("Usage : ");
 		System.out.println("java ... <fichierActivités> <fichierContraintes> [nombreGenerationEdt]");
-		System.exit(1);
+		System.exit(ERROR_INVALID_COMMAND_USAGE);
 	}
 
 }
