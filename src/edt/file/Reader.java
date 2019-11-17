@@ -1,7 +1,7 @@
 package edt.file;
 
-import edt.constraints.*;
 import edt.activity.Activity;
+import edt.constraints.*;
 
 import scheduleio.ActivityDescription;
 import scheduleio.ActivityReader;
@@ -16,11 +16,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+* Permet d'obtenir la liste des activités et des contraintes en fonction de 2 fichiers fournit en paramètres
+*/
 public class Reader {
 
+	/**
+	* Associe une activité à un identifiant (utile pour constituer les contraintes)
+	*/
 	private Map<String, Activity> activities;
+
+	/**
+	* Le chemin vers le fichier des contraintes
+	*/
 	private String constraintsFilePath;
 
+
+	/**
+	* @param activitiesFilePath Chemin vers le fichier des activités
+	* @param constraintsFilePath Chemin vers le fichier des contraintes
+	*
+	* @throws FileNotFoundException Le fichier des activités n'existe pas
+	* @throws IOException La lecture du fichier des activités a rencontré une erreur
+	*/
 	public Reader(String activitiesFilePath, String constraintsFilePath) throws FileNotFoundException, IOException {
 		this.activities = new HashMap<>();
 		this.constraintsFilePath = constraintsFilePath;
@@ -36,6 +54,14 @@ public class Reader {
 		}
 	}
 
+
+	/**
+	* Lit le fichier des contraintes et retourne la liste
+	*
+	* @throws FileNotFoundException Le fichier des contraintes n'existe pas
+	* @throws IOException La lecture du fichier des contraintes a rencontré une erreur
+	* @return La liste des contraintes qui viennent d'être lues
+	*/
 	public List<Constraint> readConstraints() throws FileNotFoundException, IOException {
 		List<Constraint> constraints = new ArrayList<>();
 		ConstraintReader constraintReader = new ConstraintReader(this.constraintsFilePath);
@@ -67,9 +93,17 @@ public class Reader {
 		return constraints;
 	}
 
+
+	/**
+	* Permet la création d'une contrainte PrecedenceConstraint
+	*
+	* @param args La liste des arguments pour la création de la contrainte
+	* @throws IllegalArgumentException L'un des arguments pour la création de la contrainte est incorrect
+	* @return La contrainte
+	*/
 	public PrecedenceConstraint getPrecedenceConstraint(String[] args) throws IllegalArgumentException {
 		if(args.length != 2) {
-			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités est attendus");
+			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités est attendu");
 		}
 
 		if(!this.activities.containsKey(args[0])) {
@@ -86,9 +120,17 @@ public class Reader {
 		return new PrecedenceConstraint(firstActivity, secondActivity);
 	}
 
+
+	/**
+	* Permet la création d'une contrainte PrecedenceConstraintWithGap
+	*
+	* @param args La liste des arguments pour la création de la contrainte
+	* @throws IllegalArgumentException L'un des arguments pour la création de la contrainte est incorrect
+	* @return La contrainte
+	*/
 	public PrecedenceConstraint getPrecedenceConstraintWithGap(String[] args) throws IllegalArgumentException {
 		if(args.length != 3) {
-			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités et la durée d'attente entre les 2 est attendus");
+			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités et la durée d'attente entre les 2 est attendu");
 		}
 
 		if(!this.activities.containsKey(args[1])) {
@@ -112,9 +154,17 @@ public class Reader {
 		return new PrecedenceConstraintWithGap(firstActivity, secondActivity, gap);
 	}
 
+
+	/**
+	* Permet la création d'une contrainte MeetConstraint
+	*
+	* @param args La liste des arguments pour la création de la contrainte
+	* @throws IllegalArgumentException L'un des arguments pour la création de la contrainte est incorrect
+	* @return La contrainte
+	*/
 	public MeetConstraint getMeetConstraint(String[] args) throws IllegalArgumentException {
 		if(args.length != 2) {
-			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités est attendus");
+			throw new IllegalArgumentException("Un tableau contenant l'identifiants des 2 activités est attendu");
 		}
 
 		if(!this.activities.containsKey(args[0])) {
@@ -131,9 +181,17 @@ public class Reader {
 		return new MeetConstraint(firstActivity, secondActivity);
 	}
 
+
+	/**
+	* Permet la création d'une contrainte MaxSpanConstraint
+	*
+	* @param args La liste des arguments pour la création de la contrainte
+	* @throws IllegalArgumentException L'un des arguments pour la création de la contrainte est incorrect
+	* @return La contrainte
+	*/
 	public MaxSpanConstraint getMaxSpanConstraint(String[] args) throws IllegalArgumentException {
 		if(args.length < 3) {
-			throw new IllegalArgumentException("Un tableau contenant l'identifiants des activités et la durée max est attendus");
+			throw new IllegalArgumentException("Un tableau contenant l'identifiants des activités et la durée max est attendu");
 		}
 
 		Integer dureeMax = null;
@@ -155,6 +213,12 @@ public class Reader {
 		return maxSpanConstraint;
 	}
 
+
+	/**
+	* Récupère la liste des activités
+	*
+	* @return La liste des activités
+	*/
 	public Collection<Activity> getActivities() {
 		return this.activities.values();
 	}
