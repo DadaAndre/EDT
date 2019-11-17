@@ -66,6 +66,6 @@ public class Activity {
 
 	@Override
 	public String toString() {
-		return "L'activité " + this.desc + " dure " + this.duree;
+		return "L'activité " + this.desc + " dure " + this.duree + " min";
 	}
 }
