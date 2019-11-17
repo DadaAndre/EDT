@@ -36,7 +36,11 @@ public class InteractiveScheduling {
 		Activity b = new Activity("456", 456);
 		InteractiveScheduling.activities.add(a);
 		InteractiveScheduling.activities.add(b);
-		InteractiveScheduling.constraints.add(new PrecedenceConstraint(a, b));
+		MaxSpanConstraint c = new MaxSpanConstraint(90);
+		c.add(a);
+		c.add(b);
+		c.add(a);
+		InteractiveScheduling.constraints.add(c);
 
 		InteractiveScheduling.scanner = new Scanner(System.in);
 
@@ -204,10 +208,8 @@ public class InteractiveScheduling {
 
 		List<Constraint> constraintsToDelete = new ArrayList<>();
 		for(Constraint c : InteractiveScheduling.constraints) {
-			if(c instanceof BinaryConstraint) {
-				BinaryConstraint binConstraint = (BinaryConstraint) c;
-				if(binConstraint.getFirstActivity() == activityToDelete || binConstraint.getSecondActivity() == activityToDelete)
-					constraintsToDelete.add(c);
+			if(InteractiveScheduling.constraintContainsActivity(activityToDelete, c)) {
+				constraintsToDelete.add(c);
 			}
 		}
 
@@ -216,6 +218,30 @@ public class InteractiveScheduling {
 		}
 
 		InteractiveScheduling.activities.remove(activityIndex-1);
+	}
+
+	private static boolean constraintContainsActivity(Activity activityToDelete, Constraint c) {
+		if(c instanceof BinaryConstraint) {
+			BinaryConstraint binConstraint = (BinaryConstraint) c;
+			if(binConstraint.getFirstActivity() == activityToDelete || binConstraint.getSecondActivity() == activityToDelete)
+				return true;
+		} else if(c instanceof DisjunctionConstraint) {
+			DisjunctionConstraint disjunctionConstraint = (DisjunctionConstraint) c;
+
+			return
+				InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getFirstConstraint())
+				|| InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getSecondConstraint());
+		} else if(c instanceof NegationConstraint) {
+			NegationConstraint negConstraint = (NegationConstraint) c;
+
+			return InteractiveScheduling.constraintContainsActivity(activityToDelete, negConstraint.getConstraint());
+		} else if(c instanceof MaxSpanConstraint) {
+			MaxSpanConstraint maxSpanConstraint = (MaxSpanConstraint) c;
+
+			return maxSpanConstraint.contains(activityToDelete);
+		}
+
+		return false;
 	}
 
 	/* ==================================================
@@ -348,7 +374,7 @@ public class InteractiveScheduling {
 
 			Constraint selectedConstraint = InteractiveScheduling.constraints.get(contrainteIndex-1);
 			InteractiveScheduling.constraints.remove(selectedConstraint);
-			
+
 			if(selectedConstraint instanceof NegationConstraint) {
 				NegationConstraint negConstraint = (NegationConstraint) selectedConstraint;
 				selectedConstraint = negConstraint.getConstraint();
