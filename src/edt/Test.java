@@ -136,16 +136,17 @@ public class Test {
 		PrecedenceConstraint co1 = new PrecedenceConstraint (options, sport);
 		PrecedenceConstraint co2 = new PrecedenceConstraint (ip, marche);
 
-		DisjunctionConstraint disFalse = new DisjunctionConstraint(co1,co2);
-		UnitTest.isFalse(disFalse.isSatisfiedBySchedule(emploiDuTemps));//les deux contraintes sont fausses
+		//les deux contraintes sont fausses
+		DisjunctionConstraint disFalse = new DisjunctionConstraint(co1, co2);
+		UnitTest.isFalse(disFalse.isSatisfiedBySchedule(emploiDuTemps));
+
+		//les deux contraintes sont vrais
 		DisjunctionConstraint disTrue = new DisjunctionConstraint(c1,c2);
-		UnitTest.isTrue(disTrue.isSatisfiedBySchedule(emploiDuTemps));//les deux contraintes sont vrais
+		UnitTest.isTrue(disTrue.isSatisfiedBySchedule(emploiDuTemps));
 
-		PrecedenceConstraint co3 = new PrecedenceConstraint (options, sport);
-		PrecedenceConstraint co4 = new PrecedenceConstraint (ip, devoirs);
-		DisjunctionConstraint disjunctionFalse = new DisjunctionConstraint(co1,co2);
-		UnitTest.isFalse(disjunctionFalse.isSatisfiedBySchedule(emploiDuTemps));//une seule contrainte est fausse, l'autre vrai
-
+		//une seule contrainte est fausse, l'autre vrai
+		disFalse = new DisjunctionConstraint(c1, co2);
+		UnitTest.isTrue(disFalse.isSatisfiedBySchedule(emploiDuTemps));
 		UnitTest.summary();
 	}
 
