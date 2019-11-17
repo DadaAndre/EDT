@@ -78,6 +78,17 @@ public class MaxSpanConstraint implements Constraint {
 
 
 	/**
+ 	 * Permet de savoir si une activité est dans la liste
+	 *
+	 * @param a L'activité à vérifier
+	 * @return True si l'activité est dans la liste, false sinon
+ 	 */
+	public boolean contains(Activity a) {
+		return this.activities.contains(a);
+	}
+
+
+	/**
  	 * Change l'intervalle max pour réaliser les activités
 	 *
 	 * @param dureeMax La nouvelle intervalle maximum pour réaliser les activités
