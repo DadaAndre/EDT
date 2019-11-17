@@ -1,7 +1,7 @@
 #!/bin/sh
 
 showCommand() {
-	echo "Usage : $0 <clean|build|run|test|javadoc|deploy>" 1>&2
+	echo "Usage : $0 <clean|build|run|interactive|test|javadoc|deploy>" 1>&2
 	exit 1
 }
 
@@ -46,6 +46,14 @@ runProject() {
 
 	echo '>run'
 
+	java -cp 'build:libs/scheduleio.jar' edt.Main
+}
+
+interactiveProject() {
+	buildProject
+
+	echo '>interactive'
+
 	java -cp 'build:libs/scheduleio.jar' edt.InteractiveScheduling
 }
 
@@ -79,6 +87,8 @@ do
 		createJavadoc
 	elif [ $1 = "run" ]; then
 		runProject
+	elif [ $1 = "interactive" ]; then
+		interactiveProject
 	elif [ $1 = "test" ]; then
 		testProject
 	elif [ $1 = "deploy" ]; then
