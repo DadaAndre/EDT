@@ -1,8 +1,9 @@
 package edt.constraints;
 
 import edt.activity.Activity;
-import java.util.HashMap;
+
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
 * Représente une contrainte binaire concernant deux {@link Activity}.
@@ -13,6 +14,7 @@ public abstract class BinaryConstraint implements Constraint {
 	* La première activité
 	*/
 	private Activity firstActivity;
+
 	/**
 	* La deuxième activité
 	*/
@@ -41,11 +43,12 @@ public abstract class BinaryConstraint implements Constraint {
 
 	@Override
 	public boolean isSatisfiedBySchedule(HashMap<Activity, GregorianCalendar> edt) {
+		// Si la première ou la deuxième activité ne fait pas partie de l'emploi du temps on return false
 		if(!edt.containsKey(this.getFirstActivity()) || !edt.containsKey(this.getSecondActivity())) {
 			return false;
 		}
 
-		return isSatisfied(edt.get(this.getFirstActivity()),edt.get(this.getSecondActivity()));
+		return isSatisfied(edt.get(this.getFirstActivity()), edt.get(this.getSecondActivity()));
 	}
 
 
