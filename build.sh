@@ -13,6 +13,10 @@ buildProject() {
 	fi
 
 	javac -cp 'src:libs/scheduleio.jar' -d build src/edt/*.java -Xlint
+
+	if [ ! $? -eq 0 ]; then
+		exit 2
+	fi
 }
 
 cleanProject() {

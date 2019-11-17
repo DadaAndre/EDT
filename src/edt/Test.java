@@ -90,6 +90,12 @@ public class Test {
 		HashMap<Activity, GregorianCalendar> bestScheduler = edtAleatoire.edtWithMostSatisfiedConstraint(25);
 		System.out.println("cet activité respecte "+ edtAleatoire.numberOfSatisfiedConstraint(bestScheduler) + " contraintes");
 
+		//Création de MaxSpanConstraint
+		MaxSpanConstraint contrainteEnsemble = new MaxSpanConstraint(90);
+		contrainteEnsemble.add(sport);
+		contrainteEnsemble.add(marche);
+		contrainteEnsemble.add(devoirs);
+
 		//--------------------------------------- TESTS ---------------------------------------
 		UnitTest.setTestLabel("PrecedenceConstraint");
 		UnitTest.isFalse(contrainte.isSatisfied(date1_11h, date1_9h)); //2nde activité avant la 1ère
@@ -117,7 +123,6 @@ public class Test {
 		UnitTest.isTrue(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
 		verif.addConstraint(new PrecedenceConstraint(devoirs, ip)); // On ajoute une contrainte non valable
 		UnitTest.isFalse(verif.verify(emploiDuTemps)); //emploi du temps conforme avec les contraintes
-
 
 		// Pour aller plus loin: ordonnancement d'activité
 		PrecedenceConstraint c1 = new PrecedenceConstraint (ip, devoirs);
@@ -147,6 +152,17 @@ public class Test {
 		//une seule contrainte est fausse, l'autre vrai
 		disFalse = new DisjunctionConstraint(c1, co2);
 		UnitTest.isTrue(disFalse.isSatisfiedBySchedule(emploiDuTemps));
+
+		UnitTest.setTestLabel("MaxSpanConstraint");
+		// L'ensemble des activités met 10h à se dérouler. contrainteEnsemble à une durée maximum de 90min (cf : instanciation)
+		UnitTest.isFalse(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
+		// On met la durée max à 10h pile
+		contrainteEnsemble.setDureeMax(10*60);
+		UnitTest.isTrue(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
+		// On met la durée max à 9h et 59 minutes. Ce test permet de vérifier que la conversion réalisé dans MaxSpanConstraint est bien en minutes
+		contrainteEnsemble.setDureeMax(10*60-1);
+		UnitTest.isFalse(contrainteEnsemble.isSatisfiedBySchedule(emploiDuTemps));
+
 		UnitTest.summary();
 	}
 
