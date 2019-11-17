@@ -80,10 +80,12 @@ public class RandomScheduler {
 			//on ajoute ce nouvel horaire aléatoire au tableau
 			this.randomTimeUsed.add(randomTime);
 
-			//on lui ajoute 8 pour que l'horaire commence à 8h et non à minuit
-			randomTime += 8;
+			//on décompose l'horaire obtenu en heures et minutes
 			int hour = randomTime/4;
 			int minutes = (randomTime%4)*15;
+			
+			//on lui ajoute 8 pour que l'horaire commence à 8h et non à minuit
+			hour += 8;
 
 			//on ajoute une nouvelle activité et son horaire dans l'emploi du temps
 			emploiDuTemps.put(act, new GregorianCalendar(2019, 9, 15, hour, minutes, 0));
