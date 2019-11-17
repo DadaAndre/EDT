@@ -9,10 +9,12 @@ public class Activity {
 	* Description de l'activité
 	*/
 	private String desc;
+
 	/**
 	* Durée de l'activité
 	*/
 	private int duree;
+
 
 	/**
 	* @param desc Description de l'activité
@@ -66,6 +68,6 @@ public class Activity {
 
 	@Override
 	public String toString() {
-		return "L'activité " + this.desc + " dure " + this.duree + " min";
+		return "L'activité " + this.desc + " dure " + this.duree + " mins";
 	}
 }
