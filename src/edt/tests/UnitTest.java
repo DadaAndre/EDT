@@ -31,6 +31,7 @@ public class UnitTest {
 	* Permet de connaître le nombre total de tests effectués
 	*/
 	private static int totalTest = 0;
+
 	/**
 	* Permet de connaître le nombre total de tests échoués
 	*/
@@ -40,6 +41,7 @@ public class UnitTest {
 	* Permet de connaître le nombre de tests effectués pour la série de test en cours
 	*/
 	private static int numTest = 0;
+
 	/**
 	* Permet de connaître le nombre de tests échoués pour la série de test en cours
 	*/
@@ -144,7 +146,7 @@ public class UnitTest {
 		if(UnitTest.nbEchec > 0) {
 			System.out.println((UnitTest.numTest-UnitTest.nbEchec) + "/" + UnitTest.numTest + " test(s) réussi(s)");
 		} else {
-			System.out.println(UnitTest.numTest  + " test(s) réussi(s)");
+			System.out.println(UnitTest.numTest + " test(s) réussi(s)");
 		}
 
 		System.out.println();
@@ -169,7 +171,7 @@ public class UnitTest {
 		if(UnitTest.nbEchecTotal > 0) {
 			System.out.println((UnitTest.totalTest - UnitTest.nbEchecTotal) + "/" + UnitTest.totalTest + " test(s) réussi(s)");
 		} else {
-			System.out.println("Les " + UnitTest.totalTest  + " test(s) réussi(s)");
+			System.out.println("Les " + UnitTest.totalTest + " test(s) réussi(s)");
 		}
 	}
 
