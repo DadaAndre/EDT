@@ -13,13 +13,13 @@ import java.util.List;
 public class MaxSpanConstraint implements Constraint {
 
 	/**
-	 * Dure maximum pour faire les activités
-	 */
+	* Durée maximum pour faire les activités
+	*/
 	private int dureeMax;
 
 	/**
-	 * Liste des activités
-	 */
+	* Liste des activités
+	*/
 	private ArrayList<Activity> liste;
 
 
@@ -34,7 +34,7 @@ public class MaxSpanConstraint implements Constraint {
 		Activity plusTard = null;
 		GregorianCalendar finPlusTard = new GregorianCalendar();
 
-		for(Activity a : liste) {
+		for(Activity a : this.liste) {
 			// On regarde quand se finit l'activité en cours
 			GregorianCalendar finA = new GregorianCalendar();
 			finA.setTime(edt.get(a).getTime());
@@ -49,38 +49,42 @@ public class MaxSpanConstraint implements Constraint {
 				continue;
 			}
 
+			// L'activité "a" commence plus tôt que "plusTot"
 			if(edt.get(a).compareTo(edt.get(plusTot)) < 0) {
 				plusTot = a;
 			}
 
+			// L'activité "a" se termine plus tard que "plusTard"
 			if(finA.compareTo(finPlusTard) > 0) {
 				plusTard = a;
 				finPlusTard = finA;
 			}
 		}
 
-		GregorianCalendar debutPlusTot = edt.get(plusTot);
 
 		// Récupère la différence de temps en millisecondes entre le début de l'activité la plus tot et la fin de la plus tard
+		GregorianCalendar debutPlusTot = edt.get(plusTot);
+		long diffTimeMilis = finPlusTard.getTime().getTime() - debutPlusTot.getTime().getTime();
+
 		// On convertit ensuite en minutes (= diviser par 1000*60)
-		return (finPlusTard.getTime().getTime() - debutPlusTot.getTime().getTime())/(1000*60) <= this.dureeMax;
+		return diffTimeMilis/(1000*60) <= this.dureeMax;
 	}
 
 
 	/**
- 	 * Ajoute une activite a la liste
-	 *
-	 * @param a L'activité à ajouter
- 	 */
+ 	* Ajoute une activite à la liste
+	*
+	* @param a L'activité à ajouter
+ 	*/
 	public void add(Activity a) {
 		this.liste.add(a);
 	}
 
 
 	/**
- 	 * Change l'intervalle max pour réaliser les activités
-	 *
-	 * @param dureeMax La nouvelle intervalle maximum pour réaliser les activités
+ 	* Change l'intervalle max pour réaliser les activités
+	*
+	* @param dureeMax La nouvelle intervalle maximum pour réaliser les activités
 	*/
 	public void setDureeMax(int dureeMax) {
 		this.dureeMax = dureeMax;
