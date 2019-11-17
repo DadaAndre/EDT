@@ -3,8 +3,8 @@ package edt.constraints;
 import edt.activity.Activity;
 import edt.constraints.Constraint;
 
-import java.util.HashMap;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 /**
 * Contrainte satisfaite lorsqu'une contrainte C échoue
