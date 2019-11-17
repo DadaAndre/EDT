@@ -38,7 +38,7 @@ createJavadoc() {
 		mkdir javadoc
 	fi
 
-	javadoc -subpackages edt -private -d javadoc -cp src
+	javadoc -subpackages edt -private -d javadoc -cp "src:libs/scheduleio.jar"
 }
 
 runProject() {
