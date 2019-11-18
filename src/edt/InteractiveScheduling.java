@@ -598,7 +598,8 @@ public class InteractiveScheduling {
 		if(listOfFailConstraint.size() == 0) {
 			System.out.println("L'emploi du temps est valide");
 		} else {
-			System.out.println("Contraintes non satisfaites : ");
+			System.out.println("L'emploi du temps satisfait " +  numberOfSatisfiedConstraint(InteractiveScheduling.schedule) + " contraintes");
+			System.out.println("Contraintes non satisfaites (" + listOfFailConstraint.size() + "):");
 			int i = 1;
 			for(Constraint c : listOfFailConstraint) {
 				System.out.println(i + " - " + c);
