@@ -32,22 +32,6 @@ public class InteractiveScheduling {
 		InteractiveScheduling.constraints = new ArrayList<>();
 		InteractiveScheduling.schedule = new HashMap<>();
 
-		Activity a = new Activity("123", 123);
-		Activity b = new Activity("456", 456);
-		Activity css = new Activity("456", 456);
-		InteractiveScheduling.activities.add(a);
-		InteractiveScheduling.activities.add(b);
-		InteractiveScheduling.activities.add(css);
-		MaxSpanConstraint c = new MaxSpanConstraint(90);
-		MaxSpanConstraint c2 = new MaxSpanConstraint(90);
-		c.add(a);
-		c.add(b);
-		c2.add(a);
-		c2.add(b);
-		c.add(a);
-		InteractiveScheduling.constraints.add(c);
-		InteractiveScheduling.constraints.add(c2);
-
 		InteractiveScheduling.scanner = new Scanner(System.in);
 
 		int choice = 0;
