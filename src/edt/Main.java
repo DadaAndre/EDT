@@ -80,6 +80,11 @@ public class Main {
 		for(Map.Entry<Activity, GregorianCalendar> entry : edt.entrySet()) {
 			System.out.println(entry.getKey() + " : " + dateFormat.format(entry.getValue().getTime()));
 		}
+
+		System.out.println();
+		System.out.println("L'emploi du temps satisfait " + randomScheduler.numberOfSatisfiedConstraint(edt) + " contraintes");
+		System.out.println("Contraintes non satisfaites : " + (constraints.size() - randomScheduler.numberOfSatisfiedConstraint(edt)));
+
 	}
 
 	// On affiche la commande à utiliser
