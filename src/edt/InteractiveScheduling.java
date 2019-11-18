@@ -2,9 +2,10 @@ package edt;
 
 import edt.activity.Activity;
 import edt.constraints.*;
+import edt.constraints.utils.Verifier;
 
-import java.text.ParseException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -22,6 +23,13 @@ public class InteractiveScheduling {
 	private static List<Constraint> constraints;
 	private static HashMap<Activity, GregorianCalendar> schedule;
 
+	private static final int MEET_CONTRAINT_INDEX = 1;
+	private static final int PRECEDENCE_CONSTRAINT_INDEX = 2;
+	private static final int PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX = 3;
+	private static final int MAX_SPAN_CONSTRAINT_INDEX = 4;
+	private static final int DISJUNCTION_CONSTRAINT_INDEX = 5;
+	private static final int NEGATION_CONSTRAINT_INDEX = 6;
+
 	public static void main(String[] args) {
 		InteractiveScheduling.showMenu();
 	}
@@ -33,8 +41,8 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.scanner = new Scanner(System.in);
 
+		// Boucle du menu principal
 		int choice = 0;
-
 		do {
 			System.out.println("========== InteractiveScheduling ==========");
 			System.out.println("1. Modification des activités");
@@ -71,6 +79,7 @@ public class InteractiveScheduling {
 		System.out.println("");
 		int choice = 0;
 
+		// Menu pour les activités
 		do {
 			System.out.println("========== Modification des activités ==========");
 			System.out.println("1. Afficher les activités");
@@ -99,11 +108,13 @@ public class InteractiveScheduling {
 	}
 
 	private static void showActivities() {
+		// Si aucune activité n'existe on affiche un message d'erreur
 		if(InteractiveScheduling.activities.size() == 0) {
 			System.out.println("Aucune activité de disponible");
 			return;
 		}
 
+		// SInon on les affiches tous
 		int i = 1;
 		for(Activity a : InteractiveScheduling.activities) {
 			System.out.println(i + " - " + a.getDesc() + ", " + a.getDuree() + "mins");
@@ -129,6 +140,7 @@ public class InteractiveScheduling {
 	}
 
 	private static void updateActivity() {
+		// Si il n'y a aucune activité, on ne peut pas en modifier
 		if(InteractiveScheduling.activities.size() == 0) {
 			System.out.println("Aucune activité de disponible");
 			return;
@@ -148,6 +160,7 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.clearBuffer();
 
+		// NB : On ne changera les valeurs que si elles ont été modifié (pas d'appuie sur entrée)
 		System.out.print("Nom de l'activité ["+selectedActivity.getDesc()+"] : ");
 		String desc = InteractiveScheduling.scanner.nextLine();
 
@@ -195,20 +208,45 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.schedule.remove(activityToDelete);
 
+		// On ajoute à la liste les contraintes à supprimer
 		List<Constraint> constraintsToDelete = new ArrayList<>();
 		for(Constraint c : InteractiveScheduling.constraints) {
-			if(c instanceof BinaryConstraint) {
-				BinaryConstraint binConstraint = (BinaryConstraint) c;
-				if(binConstraint.getFirstActivity() == activityToDelete || binConstraint.getSecondActivity() == activityToDelete)
-					constraintsToDelete.add(c);
+			if(InteractiveScheduling.constraintContainsActivity(activityToDelete, c)) {
+				constraintsToDelete.add(c);
 			}
 		}
 
+		// On supprime vraiment les contraintes
 		for(Constraint c : constraintsToDelete) {
 			InteractiveScheduling.constraints.remove(c);
 		}
 
 		InteractiveScheduling.activities.remove(activityIndex-1);
+	}
+
+	private static boolean constraintContainsActivity(Activity activityToDelete, Constraint c) {
+		// Vérifie le type de la contrainte pour savoir si l'activité est contenue dedans
+		if(c instanceof BinaryConstraint) {
+			BinaryConstraint binConstraint = (BinaryConstraint) c;
+			if(binConstraint.getFirstActivity() == activityToDelete || binConstraint.getSecondActivity() == activityToDelete)
+				return true;
+		} else if(c instanceof DisjunctionConstraint) {
+			DisjunctionConstraint disjunctionConstraint = (DisjunctionConstraint) c;
+
+			return
+				InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getFirstConstraint())
+				|| InteractiveScheduling.constraintContainsActivity(activityToDelete, disjunctionConstraint.getSecondConstraint());
+		} else if(c instanceof NegationConstraint) {
+			NegationConstraint negConstraint = (NegationConstraint) c;
+
+			return InteractiveScheduling.constraintContainsActivity(activityToDelete, negConstraint.getConstraint());
+		} else if(c instanceof MaxSpanConstraint) {
+			MaxSpanConstraint maxSpanConstraint = (MaxSpanConstraint) c;
+
+			return maxSpanConstraint.contains(activityToDelete);
+		}
+
+		return false;
 	}
 
 	/* ==================================================
@@ -243,6 +281,7 @@ public class InteractiveScheduling {
 	}
 
 	private static void showConstraints() {
+		// Si aucune contrainte on affiche une erreur
 		if(InteractiveScheduling.constraints.size() == 0) {
 			System.out.println("Aucune contrainte de disponible");
 			return;
@@ -258,56 +297,161 @@ public class InteractiveScheduling {
 	private static void addConstraint() {
 		InteractiveScheduling.clearBuffer();
 
-		if(InteractiveScheduling.activities.size() < 2) {
-			System.out.println("Vous devez d'abord ajouter au moins 2 activités");
-			return;
-		}
-
 		System.out.println("Quelle contrainte voulez vous ajouter : ");
 		System.out.println("1 - MeetConstraint");
 		System.out.println("2 - PrecedenceConstraint");
 		System.out.println("3 - PrecedenceConstraintWithGap");
-		int choix = InteractiveScheduling.scanner.nextInt();
+		System.out.println("4 - MaxSpanConstraint");
+		System.out.println("5 - DisjunctionConstraint");
+		System.out.println("6 - NegationConstraint");
+		int choixConstraint = InteractiveScheduling.scanner.nextInt();
 
-		if(choix < 1 || choix > 3) {
+		if(choixConstraint < MEET_CONTRAINT_INDEX || choixConstraint > NEGATION_CONSTRAINT_INDEX) {
 			System.out.println("Cette option n'existe pas");
 			return;
 		}
 
-		System.out.println("Choisissez 2 activités");
-		System.out.println();
-		InteractiveScheduling.showActivities();
-		System.out.println();
-
-		int activite1Index = InteractiveScheduling.scanner.nextInt();
-		int activite2Index = InteractiveScheduling.scanner.nextInt();
-
-		if(activite1Index-1 > InteractiveScheduling.activities.size() || activite1Index-1 < 0) {
-			System.out.println("L'activité n'existe pas");
-			return;
-		}
-
-		if(activite2Index-1 > InteractiveScheduling.activities.size() || activite2Index-1 < 0) {
-			System.out.println("L'activité n'existe pas");
-			return;
-		}
-
-		Activity activity1 = InteractiveScheduling.activities.get(activite1Index-1);
-		Activity activity2 = InteractiveScheduling.activities.get(activite2Index-1);
-
-		if(choix == 1) {
-			InteractiveScheduling.constraints.add(new MeetConstraint(activity1, activity2));
-		} else if(choix == 2) {
-			InteractiveScheduling.constraints.add(new PrecedenceConstraint(activity1, activity2));
-		} else if(choix == 3) {
-			System.out.println("Temps entre les 2 activités (mins) :");
-			int gap = InteractiveScheduling.scanner.nextInt();
-
-			if(gap < 0) {
-				System.out.println("Le temps entre les 2 activités ne peut pas être négatif");
+		// Contrainte binaire, on sélectionne 2 activités
+		if(choixConstraint == MEET_CONTRAINT_INDEX || choixConstraint == PRECEDENCE_CONSTRAINT_INDEX || choixConstraint == PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX) {
+			if(InteractiveScheduling.activities.size() < 2) {
+				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
+				return;
 			}
 
-			InteractiveScheduling.constraints.add(new PrecedenceConstraintWithGap(activity1, activity2, gap));
+			System.out.println("Choisissez 2 activités");
+			System.out.println();
+			InteractiveScheduling.showActivities();
+			System.out.println();
+
+			int activite1Index = InteractiveScheduling.scanner.nextInt();
+			int activite2Index = InteractiveScheduling.scanner.nextInt();
+
+			if(activite1Index-1 > InteractiveScheduling.activities.size() || activite1Index-1 < 0) {
+				System.out.println("L'activité n'existe pas");
+				return;
+			}
+
+			if(activite2Index-1 > InteractiveScheduling.activities.size() || activite2Index-1 < 0) {
+				System.out.println("L'activité n'existe pas");
+				return;
+			}
+
+			Activity activity1 = InteractiveScheduling.activities.get(activite1Index-1);
+			Activity activity2 = InteractiveScheduling.activities.get(activite2Index-1);
+
+			if(choixConstraint == MEET_CONTRAINT_INDEX) {
+				InteractiveScheduling.constraints.add(new MeetConstraint(activity1, activity2));
+			} else if(choixConstraint == PRECEDENCE_CONSTRAINT_INDEX) {
+				InteractiveScheduling.constraints.add(new PrecedenceConstraint(activity1, activity2));
+			} else if(choixConstraint == PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX) {
+				System.out.println("Temps entre les 2 activités (mins) :");
+				int gap = InteractiveScheduling.scanner.nextInt();
+
+				if(gap < 0) {
+					System.out.println("Le temps entre les 2 activités ne peut pas être négatif");
+				}
+
+				InteractiveScheduling.constraints.add(new PrecedenceConstraintWithGap(activity1, activity2, gap));
+			}
+		} else if(choixConstraint == MAX_SPAN_CONSTRAINT_INDEX) {
+			if(InteractiveScheduling.activities.size() < 2) {
+				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
+				return;
+			}
+
+			System.out.println("Combien de temps max ?");
+			MaxSpanConstraint maxSpanConstraint = new MaxSpanConstraint(InteractiveScheduling.scanner.nextInt());
+			System.out.println();
+
+			// On sélectionne plusieurs activités
+			int activiteIndex = 0;
+			do {
+				System.out.println("Choisissez 1 activités");
+				System.out.println();
+				InteractiveScheduling.showActivities();
+				System.out.println("0 - Arrêter");
+				System.out.println();
+
+				activiteIndex = InteractiveScheduling.scanner.nextInt();
+				if(activiteIndex == 0)
+					break;
+
+				if(activiteIndex-1 > InteractiveScheduling.activities.size() || activiteIndex-1 < 0) {
+					System.out.println("L'activité n'existe pas");
+					return;
+				}
+
+				maxSpanConstraint.add(InteractiveScheduling.activities.get(activiteIndex-1));
+			} while(activiteIndex != 0);
+
+			InteractiveScheduling.constraints.add(maxSpanConstraint);
+		} else if(choixConstraint == DISJUNCTION_CONSTRAINT_INDEX) {
+			if(InteractiveScheduling.constraints.size() < 2) {
+				System.out.println("Vous devez d'abord ajouter au moins 2 contraintes");
+				return;
+			}
+
+			System.out.println("Choisissez 2 contraintes");
+			System.out.println();
+			InteractiveScheduling.showConstraints();
+			System.out.println();
+
+			int contrainte1Index = InteractiveScheduling.scanner.nextInt();
+			int contrainte2Index = InteractiveScheduling.scanner.nextInt();
+			if(contrainte1Index-1 >= InteractiveScheduling.constraints.size() || contrainte1Index < 1) {
+				System.out.println("Cette contrainte n'existe pas");
+				System.out.println();
+				return;
+			}
+
+			if(contrainte2Index-1 >= InteractiveScheduling.constraints.size() || contrainte2Index < 1) {
+				System.out.println("Cette contrainte n'existe pas");
+				System.out.println();
+				return;
+			}
+
+			if(contrainte1Index == contrainte2Index) {
+				System.out.println("Merci de sélectionner 2 contraintes différentes");
+				System.out.println();
+				return;
+			}
+
+			Constraint selectedConstraint1 = InteractiveScheduling.constraints.get(contrainte1Index-1);
+			Constraint selectedConstraint2 = InteractiveScheduling.constraints.get(contrainte2Index-1);
+
+			InteractiveScheduling.constraints.remove(selectedConstraint1);
+			InteractiveScheduling.constraints.remove(selectedConstraint2);
+
+			InteractiveScheduling.constraints.add(new DisjunctionConstraint(selectedConstraint1, selectedConstraint2));
+		} else if(choixConstraint == NEGATION_CONSTRAINT_INDEX) {
+			if(InteractiveScheduling.constraints.size() < 1) {
+				System.out.println("Vous devez d'abord ajouter au moins 1 contrainte");
+				return;
+			}
+
+			System.out.println("Choisissez 1 contrainte");
+			System.out.println();
+			InteractiveScheduling.showConstraints();
+			System.out.println();
+
+			int contrainteIndex = InteractiveScheduling.scanner.nextInt();
+			if(contrainteIndex-1 >= InteractiveScheduling.activities.size() || contrainteIndex < 1) {
+				System.out.println("Cette contrainte n'existe pas");
+				System.out.println();
+				return;
+			}
+
+			Constraint selectedConstraint = InteractiveScheduling.constraints.get(contrainteIndex-1);
+			InteractiveScheduling.constraints.remove(selectedConstraint);
+
+			// Si on fait la négation d'une négation on reprend la contrainte d'origine
+			if(selectedConstraint instanceof NegationConstraint) {
+				NegationConstraint negConstraint = (NegationConstraint) selectedConstraint;
+				selectedConstraint = negConstraint.getConstraint();
+				InteractiveScheduling.constraints.add(selectedConstraint);
+			} else {
+				InteractiveScheduling.constraints.add(new NegationConstraint(selectedConstraint));
+			}
 		}
 	}
 
@@ -373,6 +517,7 @@ public class InteractiveScheduling {
 
 		int i = 1;
 		for(Activity a : InteractiveScheduling.activities) {
+			// Si l'activité est dans l'emploi du temps on l'affiche, sinon on précise qu'elle n'est pas plannifié
 			if(InteractiveScheduling.schedule.containsKey(a))
 				System.out.println(i + " - " + a + " : " + InteractiveScheduling.dateFormat.format(InteractiveScheduling.schedule.get(a).getTime()));
 			else
@@ -441,29 +586,32 @@ public class InteractiveScheduling {
 					Verification emploi du temps
 	   ================================================== */
 	private static void verify() {
-		int i = 1;
-		boolean isScheduleValid = true;
-		for(Constraint c : constraints) {
-			if(!c.isSatisfiedBySchedule(InteractiveScheduling.schedule)) {
-				if(isScheduleValid) {
-					System.out.println("Contraintes non satisfaites : ");
-				}
-
-				System.out.println(i + " - " + c);
-				isScheduleValid = false;
-			}
-
-			i++;
+		Verifier verifier = new Verifier();
+		for(Constraint c : InteractiveScheduling.constraints) {
+			verifier.addConstraint(c);
 		}
 
-		if(isScheduleValid) {
+		// On récupère la liste des contraintes non satisfaites
+		List<Constraint> listOfFailConstraint = verifier.listOfFailConstraint(InteractiveScheduling.schedule);
+
+		// On affiche si l'emploi du temps est valide ou pas
+		if(listOfFailConstraint.size() == 0) {
 			System.out.println("L'emploi du temps est valide");
 		} else {
-			System.out.println("L'emploi du temps n'est pas valide");
+			System.out.println("Contraintes non satisfaites : ");
+			int i = 1;
+			for(Constraint c : listOfFailConstraint) {
+				System.out.println(i + " - " + c);
+				i++;
+			}
+
+			System.out.println("");
+			System.out.println("L'emploi du temps est invalide");
 		}
 	}
 
 	private static void clearBuffer() {
+		// Permet après avoir rentré un nombre de pouvoir saisir du texte
 		InteractiveScheduling.scanner.nextLine();
 	}
 

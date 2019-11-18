@@ -50,4 +50,10 @@ public class NegationConstraint implements Constraint {
 		this.constraint = constraint;
 	}
 
+
+	@Override
+	public String toString() {
+		return "non(" +  this.constraint + ")";
+	}
+
 }
