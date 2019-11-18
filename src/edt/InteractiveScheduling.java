@@ -353,8 +353,36 @@ public class InteractiveScheduling {
 				InteractiveScheduling.constraints.add(new PrecedenceConstraintWithGap(activity1, activity2, gap));
 			}
 		} else if(choix == 4) {
+			if(InteractiveScheduling.activities.size() < 2) {
+				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
+				return;
+			}
 
+			System.out.println("Combien de temps max ?");
+			MaxSpanConstraint maxSpanConstraint = new MaxSpanConstraint(InteractiveScheduling.scanner.nextInt());
+			System.out.println();
 
+			int activiteIndex = 0;
+			do {
+				System.out.println("Choisissez 1 activités");
+				System.out.println();
+				InteractiveScheduling.showActivities();
+				System.out.println("0 - Arrêter");
+				System.out.println();
+
+				activiteIndex = InteractiveScheduling.scanner.nextInt();
+				if(activiteIndex == 0)
+					break;
+
+				if(activiteIndex-1 > InteractiveScheduling.activities.size() || activiteIndex-1 < 0) {
+					System.out.println("L'activité n'existe pas");
+					return;
+				}
+
+				maxSpanConstraint.add(InteractiveScheduling.activities.get(activiteIndex-1));
+			} while(activiteIndex != 0);
+
+			InteractiveScheduling.constraints.add(maxSpanConstraint);
 		} else if(choix == 5) {
 			if(InteractiveScheduling.constraints.size() < 2) {
 				System.out.println("Vous devez d'abord ajouter au moins 2 contraintes");
