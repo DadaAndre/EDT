@@ -23,6 +23,13 @@ public class InteractiveScheduling {
 	private static List<Constraint> constraints;
 	private static HashMap<Activity, GregorianCalendar> schedule;
 
+	private static final int MEET_CONTRAINT_INDEX = 1;
+	private static final int PRECEDENCE_CONSTRAINT_INDEX = 2;
+	private static final int PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX = 3;
+	private static final int MAX_SPAN_CONSTRAINT_INDEX = 4;
+	private static final int DISJUNCTION_CONSTRAINT_INDEX = 5;
+	private static final int NEGATION_CONSTRAINT_INDEX = 6;
+
 	public static void main(String[] args) {
 		InteractiveScheduling.showMenu();
 	}
@@ -297,15 +304,15 @@ public class InteractiveScheduling {
 		System.out.println("4 - MaxSpanConstraint");
 		System.out.println("5 - DisjunctionConstraint");
 		System.out.println("6 - NegationConstraint");
-		int choix = InteractiveScheduling.scanner.nextInt();
+		int choixConstraint = InteractiveScheduling.scanner.nextInt();
 
-		if(choix < 1 || choix > 6) {
+		if(choixConstraint < MEET_CONTRAINT_INDEX || choixConstraint > NEGATION_CONSTRAINT_INDEX) {
 			System.out.println("Cette option n'existe pas");
 			return;
 		}
 
 		// Contrainte binaire, on sélectionne 2 activités
-		if(choix == 1 || choix == 2 || choix == 3) {
+		if(choixConstraint == MEET_CONTRAINT_INDEX || choixConstraint == PRECEDENCE_CONSTRAINT_INDEX || choixConstraint == PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX) {
 			if(InteractiveScheduling.activities.size() < 2) {
 				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
 				return;
@@ -332,11 +339,11 @@ public class InteractiveScheduling {
 			Activity activity1 = InteractiveScheduling.activities.get(activite1Index-1);
 			Activity activity2 = InteractiveScheduling.activities.get(activite2Index-1);
 
-			if(choix == 1) {
+			if(choixConstraint == MEET_CONTRAINT_INDEX) {
 				InteractiveScheduling.constraints.add(new MeetConstraint(activity1, activity2));
-			} else if(choix == 2) {
+			} else if(choixConstraint == PRECEDENCE_CONSTRAINT_INDEX) {
 				InteractiveScheduling.constraints.add(new PrecedenceConstraint(activity1, activity2));
-			} else if(choix == 3) {
+			} else if(choixConstraint == PRECEDENCE_CONSTRAINT_WITH_GAP_INDEX) {
 				System.out.println("Temps entre les 2 activités (mins) :");
 				int gap = InteractiveScheduling.scanner.nextInt();
 
@@ -346,7 +353,7 @@ public class InteractiveScheduling {
 
 				InteractiveScheduling.constraints.add(new PrecedenceConstraintWithGap(activity1, activity2, gap));
 			}
-		} else if(choix == 4) {
+		} else if(choixConstraint == MAX_SPAN_CONSTRAINT_INDEX) {
 			if(InteractiveScheduling.activities.size() < 2) {
 				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
 				return;
@@ -378,7 +385,7 @@ public class InteractiveScheduling {
 			} while(activiteIndex != 0);
 
 			InteractiveScheduling.constraints.add(maxSpanConstraint);
-		} else if(choix == 5) {
+		} else if(choixConstraint == DISJUNCTION_CONSTRAINT_INDEX) {
 			if(InteractiveScheduling.constraints.size() < 2) {
 				System.out.println("Vous devez d'abord ajouter au moins 2 contraintes");
 				return;
@@ -416,7 +423,7 @@ public class InteractiveScheduling {
 			InteractiveScheduling.constraints.remove(selectedConstraint2);
 
 			InteractiveScheduling.constraints.add(new DisjunctionConstraint(selectedConstraint1, selectedConstraint2));
-		} else if(choix == 6) {
+		} else if(choixConstraint == NEGATION_CONSTRAINT_INDEX) {
 			if(InteractiveScheduling.constraints.size() < 1) {
 				System.out.println("Vous devez d'abord ajouter au moins 1 contrainte");
 				return;
@@ -437,6 +444,7 @@ public class InteractiveScheduling {
 			Constraint selectedConstraint = InteractiveScheduling.constraints.get(contrainteIndex-1);
 			InteractiveScheduling.constraints.remove(selectedConstraint);
 
+			// Si on fait la négation d'une négation on reprend la contrainte d'origine
 			if(selectedConstraint instanceof NegationConstraint) {
 				NegationConstraint negConstraint = (NegationConstraint) selectedConstraint;
 				selectedConstraint = negConstraint.getConstraint();
