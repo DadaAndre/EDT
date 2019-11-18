@@ -4,8 +4,8 @@ import edt.activity.Activity;
 import edt.constraints.*;
 import edt.constraints.utils.Verifier;
 
-import java.text.ParseException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -34,8 +34,8 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.scanner = new Scanner(System.in);
 
+		// Boucle du menu principal
 		int choice = 0;
-
 		do {
 			System.out.println("========== InteractiveScheduling ==========");
 			System.out.println("1. Modification des activités");
@@ -72,6 +72,7 @@ public class InteractiveScheduling {
 		System.out.println("");
 		int choice = 0;
 
+		// Menu pour les activités
 		do {
 			System.out.println("========== Modification des activités ==========");
 			System.out.println("1. Afficher les activités");
@@ -100,11 +101,13 @@ public class InteractiveScheduling {
 	}
 
 	private static void showActivities() {
+		// Si aucune activité n'existe on affiche un message d'erreur
 		if(InteractiveScheduling.activities.size() == 0) {
 			System.out.println("Aucune activité de disponible");
 			return;
 		}
 
+		// SInon on les affiches tous
 		int i = 1;
 		for(Activity a : InteractiveScheduling.activities) {
 			System.out.println(i + " - " + a.getDesc() + ", " + a.getDuree() + "mins");
@@ -130,6 +133,7 @@ public class InteractiveScheduling {
 	}
 
 	private static void updateActivity() {
+		// Si il n'y a aucune activité, on ne peut pas en modifier
 		if(InteractiveScheduling.activities.size() == 0) {
 			System.out.println("Aucune activité de disponible");
 			return;
@@ -149,6 +153,7 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.clearBuffer();
 
+		// NB : On ne changera les valeurs que si elles ont été modifié (pas d'appuie sur entrée)
 		System.out.print("Nom de l'activité ["+selectedActivity.getDesc()+"] : ");
 		String desc = InteractiveScheduling.scanner.nextLine();
 
@@ -196,6 +201,7 @@ public class InteractiveScheduling {
 
 		InteractiveScheduling.schedule.remove(activityToDelete);
 
+		// On ajoute à la liste les contraintes à supprimer
 		List<Constraint> constraintsToDelete = new ArrayList<>();
 		for(Constraint c : InteractiveScheduling.constraints) {
 			if(InteractiveScheduling.constraintContainsActivity(activityToDelete, c)) {
@@ -203,6 +209,7 @@ public class InteractiveScheduling {
 			}
 		}
 
+		// On supprime vraiment les contraintes
 		for(Constraint c : constraintsToDelete) {
 			InteractiveScheduling.constraints.remove(c);
 		}
@@ -211,6 +218,7 @@ public class InteractiveScheduling {
 	}
 
 	private static boolean constraintContainsActivity(Activity activityToDelete, Constraint c) {
+		// Vérifie le type de la contrainte pour savoir si l'activité est contenue dedans
 		if(c instanceof BinaryConstraint) {
 			BinaryConstraint binConstraint = (BinaryConstraint) c;
 			if(binConstraint.getFirstActivity() == activityToDelete || binConstraint.getSecondActivity() == activityToDelete)
@@ -266,6 +274,7 @@ public class InteractiveScheduling {
 	}
 
 	private static void showConstraints() {
+		// Si aucune contrainte on affiche une erreur
 		if(InteractiveScheduling.constraints.size() == 0) {
 			System.out.println("Aucune contrainte de disponible");
 			return;
@@ -295,6 +304,7 @@ public class InteractiveScheduling {
 			return;
 		}
 
+		// Contrainte binaire, on sélectionne 2 activités
 		if(choix == 1 || choix == 2 || choix == 3) {
 			if(InteractiveScheduling.activities.size() < 2) {
 				System.out.println("Vous devez d'abord ajouter au moins 2 activités");
@@ -346,6 +356,7 @@ public class InteractiveScheduling {
 			MaxSpanConstraint maxSpanConstraint = new MaxSpanConstraint(InteractiveScheduling.scanner.nextInt());
 			System.out.println();
 
+			// On sélectionne plusieurs activités
 			int activiteIndex = 0;
 			do {
 				System.out.println("Choisissez 1 activités");
@@ -498,6 +509,7 @@ public class InteractiveScheduling {
 
 		int i = 1;
 		for(Activity a : InteractiveScheduling.activities) {
+			// Si l'activité est dans l'emploi du temps on l'affiche, sinon on précise qu'elle n'est pas plannifié
 			if(InteractiveScheduling.schedule.containsKey(a))
 				System.out.println(i + " - " + a + " : " + InteractiveScheduling.dateFormat.format(InteractiveScheduling.schedule.get(a).getTime()));
 			else
@@ -571,8 +583,10 @@ public class InteractiveScheduling {
 			verifier.addConstraint(c);
 		}
 
+		// On récupère la liste des contraintes non satisfaites
 		List<Constraint> listOfFailConstraint = verifier.listOfFailConstraint(InteractiveScheduling.schedule);
 
+		// On affiche si l'emploi du temps est valide ou pas
 		if(listOfFailConstraint.size() == 0) {
 			System.out.println("L'emploi du temps est valide");
 		} else {
@@ -589,6 +603,7 @@ public class InteractiveScheduling {
 	}
 
 	private static void clearBuffer() {
+		// Permet après avoir rentré un nombre de pouvoir saisir du texte
 		InteractiveScheduling.scanner.nextLine();
 	}
 
