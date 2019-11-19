@@ -46,7 +46,7 @@ Il s'agit du programme principal. Il prend en paramètre 2 fichiers sans espace 
 
 La commande est alors la suivante :
 ```
-java -cp "build:libs/scheduleio.jar" edt.Main activities.txt constraints.txt
+java -cp "build:libs/scheduleio.jar" edt.Main tests_file/activities tests_file/constraints
 ```
 
 ### InteractiveScheduling
@@ -55,7 +55,7 @@ Permet d'entrer des activités, des contraintes, ainsi qu'un emploi du temps en 
 
 La commande est alors la suivante :
 ```
-java -cp "build:libs/scheduleio.jar" edt. InteractiveScheduling
+java -cp "build:libs/scheduleio.jar" edt.InteractiveScheduling
 ```
 
 ### Test
