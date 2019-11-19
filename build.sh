@@ -72,10 +72,10 @@ testProject() {
 deployProject() {
 	echo '>deploy'
 
-	zip fil_rouge_poo_groupe_40.zip -r tests_file src README.md
+	zip fil_rouge_poo_groupe_40.zip -r tests_file src
+	sed '1, 23 d' README.md > /tmp/README.txt
+	zip fil_rouge_poo_groupe_40.zip -j /tmp/README.txt
 }
-
-
 
 if [ $# -lt 1 ]; then
 	showCommand
