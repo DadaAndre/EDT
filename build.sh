@@ -29,6 +29,10 @@ cleanProject() {
 	if [ -d 'javadoc' ]; then
 		rm -rf javadoc
 	fi
+
+	if [ -f 'fil_rouge_poo_groupe_40.zip' ]; then
+		rm fil_rouge_poo_groupe_40.zip
+	fi
 }
 
 createJavadoc() {
@@ -68,7 +72,7 @@ testProject() {
 deployProject() {
 	echo '>deploy'
 
-	zip fil_rouge_poo_groupe_40.zip -r src README.md
+	zip fil_rouge_poo_groupe_40.zip -r tests_file src README.md
 }
 
 

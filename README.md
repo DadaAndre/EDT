@@ -20,6 +20,7 @@ Le projet comporte 2 dossiers :
 - libs → Contient les dépendances en .jar du projet
 - src → Contient le code source de l'application
 - tests\_file → Contient les fichiers pour tester la Main
+
 # Mode d'emploi
 
 ## Compilation
