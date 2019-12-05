@@ -19,7 +19,7 @@ Le projet comporte 2 dossiers :
 
 - libs → Contient les dépendances en .jar du projet
 - src → Contient le code source de l'application
-
+- tests\_file → Contient les fichiers pour tester la Main
 # Mode d'emploi
 
 ## Compilation
@@ -82,5 +82,5 @@ Ce projet étant réalisé en groupe, voici la liste des différentes personnes 
 - 21809742 Lorada ANDRÉ - L2 Info 1A - Groupe CC 40
 - 21707781 Théo AUVRAY - L2 Info 1A - Groupe CC 40
 - 21806986 Auréline DEROUIN - L2 Info 1A - Groupe CC 40
-- 21909920 Jason MARTIN - L2 Info 1A - Groupe CC 40
+- 21909920 Justine MARTIN - L2 Info 1A - Groupe CC 40
 - 21810751 Maxime THOMAS - L2 Info 1A - Groupe CC 40
