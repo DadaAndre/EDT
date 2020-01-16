@@ -15,7 +15,7 @@ L'application devra :
 
 # Structuration du projet
 
-Le projet comporte 2 dossiers :
+Le projet comporte les dossiers suivants :
 
 - libs → Contient les dépendances en .jar du projet
 - src → Contient le code source de l'application
